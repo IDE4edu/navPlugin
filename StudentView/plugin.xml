@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+
+<!--Andy Carle, Berkeley Institute of Design, UC Berkeley-->
+
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.views">
+      <category
+            name="UCWISE"
+            id="UCWISE">
+      </category>
+      <view
+            name="UCWISE Nav"
+            icon="icons/sample.gif"
+            category="UCWISE"
+            class="studentview.views.SampleView"
+            id="studentview.views.SampleView">
+      </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectiveExtensions">
+      <perspectiveExtension
+            targetID="org.eclipse.jdt.ui.JavaPerspective">
+         <view
+               ratio="0.5"
+               relative="org.eclipse.ui.views.ProblemView"
+               relationship="right"
+               id="studentview.views.SampleView">
+         </view>
+      </perspectiveExtension>
+   </extension>
+   <extension
+         point="org.eclipse.help.contexts">
+      <contexts
+            file="contexts.xml">
+      </contexts>
+   </extension>
+   <extension point="org.eclipse.debug.core.launchConfigurationTypes">
+    <launchConfigurationType
+        name="JUnit"
+        delegate="org.eclipse.jdt.junit.launcher.JUnitLaunchConfigurationDelegate"
+        modes="run, debug"               
+        id="org.eclipse.jdt.launching.javaApplet">
+    </launchConfigurationType>
+</extension>
+
+</plugin>
