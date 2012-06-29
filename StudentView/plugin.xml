@@ -15,7 +15,7 @@
             name="UCWISE Nav"
             icon="icons/sample.gif"
             category="UCWISE"
-            class="studentview.views.SampleView"
+            class="studentview.views.UCWISENav"
             id="studentview.views.SampleView">
       </view>
    </extension>

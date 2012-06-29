@@ -1,8 +1,8 @@
-package studentview.testing;
+package studentview.model;
 
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
-public class Exercise {
+public class Step {
 
 	public enum ExerciseType{
 		HTML, EDIT
@@ -22,7 +22,7 @@ public class Exercise {
 	
 	
 	
-	public Exercise(String name, String filename, ExerciseType type, String testname, String intro){
+	public Step(String name, String filename, ExerciseType type, String testname, String intro){
 		this.name = name;
 		this.filename = filename;
 		this.type = type;		

@@ -31,9 +31,9 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
-import studentview.testing.Exercise;
-import studentview.testing.Exercise.ExerciseType;
-import studentview.testing.Segment;
+import studentview.model.Step;
+import studentview.model.Sequence;
+import studentview.model.Step.ExerciseType;
 
 
 /**
@@ -54,7 +54,7 @@ import studentview.testing.Segment;
  * <p>
  */
 
-public class SampleView extends ViewPart{
+public class UCWISENav extends ViewPart{
 
 	/**
 	 * The ID of the view as specified by the extension.
@@ -63,8 +63,8 @@ public class SampleView extends ViewPart{
 
 	
 	Label title;
-	Vector<Segment> segments = new Vector<Segment>();
-	Vector<ISAGroup> isagroups = new Vector<ISAGroup>();
+	Vector<Sequence> segments = new Vector<Sequence>();
+	Vector<SequenceWidget> isagroups = new Vector<SequenceWidget>();
 		
 	Group hidden;
 	RowData rowdata = new RowData();
@@ -74,7 +74,7 @@ public class SampleView extends ViewPart{
 	/**
 	 * The constructor.
 	 */
-	public SampleView() {
+	public UCWISENav() {
 		
 	}
 
@@ -84,7 +84,7 @@ public class SampleView extends ViewPart{
 	 */
 	
 	public void parseISA(IFile file){
-		Segment s = Segment.parseISA(file);
+		Sequence s = Sequence.parseISA(file);
 		if (s == null) System.err.println("Failed to parse file: " + file.getName());		
 		segments.add(s);
 	}
@@ -144,8 +144,8 @@ public class SampleView extends ViewPart{
 		isaHolder.setLayoutData(new RowData());
 		
 		
-		for (Segment seg : segments){			
-			ISAGroup parent = new ISAGroup(isaHolder, SWT.SHADOW_NONE, seg);
+		for (Sequence seg : segments){			
+			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg);
 			Group buttons = new Group(parent.group, SWT.SHADOW_NONE);
 		
 			parent.back = new Button(buttons, SWT.ARROW|SWT.LEFT);
@@ -165,9 +165,9 @@ public class SampleView extends ViewPart{
 			Label intro = new Label(parent.group, SWT.WRAP);
 			intro.setText(seg.getIntro());
 			parent.intro = intro;
-			intro.setLayoutData(new RowData(title.getSize().x, 50));
+			intro.setLayoutData(new RowData(title.getSize().x, 100));
 		
-			for (Exercise e : seg.getExercises()){
+			for (Step e : seg.getExercises()){
 				Group stepline = new Group(parent.group, SWT.SHADOW_NONE);
 				Label sel = new Label(stepline, SWT.WRAP);			
 				sel.setImage(selection);

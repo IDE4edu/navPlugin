@@ -8,18 +8,18 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
-import studentview.testing.Exercise;
+import studentview.model.Step;
 
 public class StepWidgets {
 	Label selection;
 	Label title;
-	Exercise exercise;
+	Step exercise;
 	Group group;
 	//Label completion;
 	Button test;
 	Button reset;
 
-	public StepWidgets(Label selection, Label title, Exercise exercise, Group group, Button test, Button reset){
+	public StepWidgets(Label selection, Label title, Step exercise, Group group, Button test, Button reset){
 		this.selection = selection;
 		this.title = title;
 		this.exercise = exercise;

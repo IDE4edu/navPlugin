@@ -25,12 +25,12 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
-import studentview.testing.Exercise;
-import studentview.testing.Segment;
+import studentview.model.Step;
+import studentview.model.Sequence;
 
-public class ISAGroup implements SelectionListener, MouseListener {
+public class SequenceWidget implements SelectionListener, MouseListener {
 
-	Segment segment;
+	Sequence segment;
 	
 	Label currentStep; 
 	Button next, back;
@@ -44,7 +44,7 @@ public class ISAGroup implements SelectionListener, MouseListener {
 	int onStep = -1;
 	
 	
-	public ISAGroup(Composite parent, int style, Segment segment) {
+	public SequenceWidget(Composite parent, int style, Sequence segment) {
 		group = new Group(parent, style);
 		this.segment = segment;		
 	}
@@ -176,7 +176,7 @@ public class ISAGroup implements SelectionListener, MouseListener {
 		if (widget == null){ //go back to the introduction
 			resetIntro();
 		}else{ //open up a step
-			Exercise ex = widget.exercise;
+			Step ex = widget.exercise;
 			try{
 				openStep(ex.getFilename());
 			}catch (Exception boo){

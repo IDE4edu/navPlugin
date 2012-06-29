@@ -1,4 +1,4 @@
-package studentview.testing;
+package studentview.model;
 
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
@@ -16,17 +16,17 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import studentview.testing.Exercise.ExerciseType;
+import studentview.model.Step.ExerciseType;
 
-public class Segment {
+public class Sequence {
 	
 	String name;
 	String intro = "";
-	Vector<Exercise> exercises;	
+	Vector<Step> exercises;	
 	
 	Group group;
 	
-	public Segment(String intro, String name, Vector<Exercise> exercises){
+	public Sequence(String intro, String name, Vector<Step> exercises){
 		this.intro = intro;
 		this.exercises = exercises;
 		this.name = name;
@@ -44,7 +44,7 @@ public class Segment {
 	}
 	
 	public void prepend(String projectName){
-		for (Exercise e : exercises) e.prepend(projectName);
+		for (Step e : exercises) e.prepend(projectName);
 	}
 	
 	public String getName(){
@@ -64,7 +64,7 @@ public class Segment {
 	}
 	
 	
-	public static Segment parseISA(IFile isa){
+	public static Sequence parseISA(IFile isa){
 		IPath path = isa.getFullPath();
 		URI uri = isa.getLocationURI();
 		File file = new File(uri);
@@ -78,18 +78,18 @@ public class Segment {
 			e.printStackTrace(System.err);
 			return null;
 		}
-		Segment s = handler.getSegment();
+		Sequence s = handler.getSegment();
 		s.prepend(path.segment(0));		
 		return handler.getSegment(); 		
 	}
 	
 	
-	public Vector<Exercise> getExercises(){
+	public Vector<Step> getExercises(){
 		return exercises;
 	}
 	
-	public Exercise getExercise(String name){
-		for (Exercise e : exercises){
+	public Step getExercise(String name){
+		for (Step e : exercises){
 			if (e.getName().equals(name)) return e;
 		}
 		return null;
@@ -113,12 +113,12 @@ public class Segment {
 		
 		@Override
 		public void endDocument() throws SAXException{
-			seg = new Segment(isaIntro, isaName, exercises);
+			seg = new Sequence(isaIntro, isaName, exercises);
 		}
 		
-		private Segment seg;
+		private Sequence seg;
 		
-		public Segment getSegment(){
+		public Sequence getSegment(){
 			return seg;
 		}
 		
@@ -140,7 +140,7 @@ public class Segment {
 		 
 		
 		StringBuffer buffer = new StringBuffer();
-		Vector<Exercise> exercises = new Vector<Exercise>();
+		Vector<Step> exercises = new Vector<Step>();
 		
 		@Override
 		public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException{
@@ -158,7 +158,7 @@ public class Segment {
 			String s = buffer.toString().trim();
 			//System.out.println("Ending element: " + qName + " String is: " + s);
 			if (qName.equalsIgnoreCase(exerciseTag)){
-				exercises.add(new Exercise(name, source, type, test, intro));
+				exercises.add(new Step(name, source, type, test, intro));
 				resetStrings();
 				reset(false);
 			}else{
