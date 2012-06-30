@@ -126,11 +126,6 @@ public class Sequence {
 		String isaName = "";
 		
 		boolean inExercise = false;
-		boolean inName = false;
-		boolean inIntro = false;
-		boolean inSource = false;
-		boolean inTest = false;
-		boolean inType = false;
 		
 		String name = "";		
 		String intro = "";
@@ -144,13 +139,7 @@ public class Sequence {
 		
 		@Override
 		public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException{
-			if (qName.equalsIgnoreCase(exerciseTag)) inExercise = true;
-			if (qName.equalsIgnoreCase(introTag)) inIntro = true;
-			if (qName.equalsIgnoreCase(nameTag)) inName = true;
-			if (qName.equalsIgnoreCase(sourceTag)) inSource = true;
-			if (qName.equalsIgnoreCase(testTag)) inTest = true;			
-			if (qName.equalsIgnoreCase(typeTag)) inType = true;
-			//System.out.println("Starting element: " + qName);
+			if (qName.equalsIgnoreCase(exerciseTag)) inExercise = true;			
 		}
 		
 		@Override
@@ -192,7 +181,7 @@ public class Sequence {
 					default:
 						type = ExerciseType.EDIT;
 					}
-					break;
+					break; 
 				case isaTag:
 					break;
 				default:
@@ -209,12 +198,7 @@ public class Sequence {
 		
 		private void reset(boolean inEx){
 			buffer = new StringBuffer();
-			inExercise = inEx;
-			inName = false;
-			inIntro = false;
-			inSource = false;
-			inTest = false;
-			inType = false;			
+			inExercise = inEx;			
 		}
 		
 		private void resetStrings(){
