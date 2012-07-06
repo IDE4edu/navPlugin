@@ -96,7 +96,10 @@ public class UCWISENav extends ViewPart{
 				@Override
 				public boolean visit(IResource resource) throws CoreException {
 					if (!(resource.getType() == IResource.FILE)) return true;
-					if (resource.getFileExtension().equalsIgnoreCase("isa")) parseISA((IFile)resource);
+					String extension = resource.getFileExtension();
+					if (extension != null){
+						if (extension.equalsIgnoreCase("isa")) parseISA((IFile)resource);
+					}
 					return true;
 				}
 			});
