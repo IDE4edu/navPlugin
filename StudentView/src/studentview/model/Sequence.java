@@ -151,40 +151,31 @@ public class Sequence {
 				resetStrings();
 				reset(false);
 			}else{
-				switch (qName){
-				case introTag:
+				if (qName.equals(introTag)){
 					if (inExercise){
 						intro = s;
 					}else{
 						isaIntro = s;
 					}
-					break;
-				case nameTag:
+				} else if (qName.equals(nameTag)){
 					if (inExercise){
 						name = s;
 					}else{
 						isaName = s;
 					}
-					break;
-				case sourceTag:
+				} else if (qName.equals(sourceTag)){
 					source = s;
-					break;
-				case testTag:
+				} else if (qName.equals(testTag)){
 					test = s;
-					break;
-				case typeTag:
-					switch (s){
-					case "html":
+				} else if (qName.equals(typeTag)){
+					if(s.equals("html")){
 						type = ExerciseType.HTML;
-						break;
-					case "code":
-					default:
+					}else{ //s = "code"
 						type = ExerciseType.EDIT;
 					}
-					break; 
-				case isaTag:
-					break;
-				default:
+				} else if (qName.equals(isaTag)){
+					//do nothing
+				}else {
 					System.err.println("Bad tag in isa file: " + qName + " String is: " + s);
 				}				
 				reset(inExercise);
