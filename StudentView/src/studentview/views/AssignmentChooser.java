@@ -1,6 +1,8 @@
 package studentview.views;
 
-//import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.jface.dialogs.IMessageProvider;
+import java.util.ArrayList;
+
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.swt.SWT;
@@ -17,70 +19,61 @@ import org.eclipse.swt.widgets.Text;
 
 public class AssignmentChooser extends TitleAreaDialog {
 
-  private Text firstNameText;
-  private Text lastNameText;
-  private String firstName;
-  private String lastName;
+  private ArrayList<String> lessons;
 
-  public AssignmentChooser(Shell parentShell) {
+  public AssignmentChooser(Shell parentShell, ArrayList<String> lesson) {
     super(parentShell);
+    this.lessons = lesson;
   }
-
+  
   @Override
   public void create() {
     super.create();
     // Set the title
     setTitle("Choose assignment");
     // Set the message
-    /*
-    setMessage("This is a TitleAreaDialog", 
+    setMessage("Which assignment would you like to view?", 
         IMessageProvider.INFORMATION);
-	*/
+	
   }
 
   @Override
   protected Control createDialogArea(Composite parent) {
     GridLayout layout = new GridLayout();
-    layout.numColumns = 2;
+    layout.numColumns = 1;
+    layout.marginBottom = 20;
+    layout.marginRight = 20;
+    layout.marginTop = 20;
+    layout.marginLeft = 20;
     // layout.horizontalAlignment = GridData.FILL;
     parent.setLayout(layout);
 
     // The text fields will grow with the size of the dialog
-    GridData gridData = new GridData();
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.horizontalAlignment = GridData.FILL;
-
-    Label label1 = new Label(parent, SWT.NONE);
-    label1.setText("First Name");
-
-    firstNameText = new Text(parent, SWT.BORDER);
-    firstNameText.setLayoutData(gridData);
+    //GridData gridData = new GridData();
+    //gridData.grabExcessHorizontalSpace = true;
+    //gridData.horizontalAlignment = GridData.FILL;
     
-    Label label2 = new Label(parent, SWT.NONE);
-    label2.setText("Last Name");
-    // You should not re-use GridData
-    gridData = new GridData();
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.horizontalAlignment = GridData.FILL;
-    lastNameText = new Text(parent, SWT.BORDER);
-    lastNameText.setLayoutData(gridData);
+    for (int i = 0; i < lessons.size(); i++) {
+    	Button radio = new Button(parent, SWT.RADIO);
+    	radio.setText(lessons.get(i));
+    	radio.setEnabled(true);
+    }
+    
     return parent;
   }
 
   @Override
   protected void createButtonsForButtonBar(Composite parent) {
-    GridData gridData = new GridData();
-    gridData.verticalAlignment = GridData.FILL;
-    gridData.horizontalSpan = 3;
-    gridData.grabExcessHorizontalSpace = true;
-    gridData.grabExcessVerticalSpace = true;
-    gridData.horizontalAlignment = SWT.CENTER;
-
-    parent.setLayoutData(gridData);
     // Create Add button
     // Own method as we need to overview the SelectionAdapter
-    createOkButton(parent, OK, "Add", true);
+    Button okButton = createOkButton(parent, OK, "Done", true);
     // Add a SelectionListener
+    okButton.addSelectionListener(new SelectionAdapter() {
+        public void widgetSelected(SelectionEvent e) {
+            setReturnCode(OK);
+            close();
+          }
+    });
 
     // Create Cancel button
     Button cancelButton = 
@@ -105,9 +98,6 @@ public class AssignmentChooser extends TitleAreaDialog {
     button.setData(new Integer(id));
     button.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
-        if (isValidInput()) {
-          okPressed();
-        }
       }
     });
     if (defaultButton) {
@@ -119,43 +109,18 @@ public class AssignmentChooser extends TitleAreaDialog {
     setButtonLayoutData(button);
     return button;
   }
-
-  private boolean isValidInput() {
-    boolean valid = true;
-    if (firstNameText.getText().length() == 0) {
-      setErrorMessage("Please maintain the first name");
-      valid = false;
-    }
-    if (lastNameText.getText().length() == 0) {
-      setErrorMessage("Please maintain the last name");
-      valid = false;
-    }
-    return valid;
-  }
   
   @Override
   protected boolean isResizable() {
     return true;
   }
-
-  // Coyy textFields because the UI gets disposed
-  // and the Text Fields are not accessible any more.
-  private void saveInput() {
-    firstName = firstNameText.getText();
-    lastName = lastNameText.getText();
+  
+  public void addToList(String s) {
+	  lessons.add(s);
   }
-
-  @Override
-  protected void okPressed() {
-    saveInput();
-    super.okPressed();
+  
+  public ArrayList<String> getLessons() {
+	  return lessons;
   }
-
-  public String getFirstName() {
-    return firstName;
-  }
-
-  public String getLastName() {
-    return lastName;
-  }
+  
 } 
