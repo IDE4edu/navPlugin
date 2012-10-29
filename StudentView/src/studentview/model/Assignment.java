@@ -18,7 +18,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import studentview.model.Step.ExerciseType;
 
-public class Sequence {
+public class Assignment {
 	
 	String name;
 	String intro = "";
@@ -26,7 +26,7 @@ public class Sequence {
 	
 	Group group;
 	
-	public Sequence(String intro, String name, Vector<Step> exercises){
+	public Assignment(String intro, String name, Vector<Step> exercises){
 		this.intro = intro;
 		this.exercises = exercises;
 		this.name = name;
@@ -64,7 +64,7 @@ public class Sequence {
 	}
 	
 	
-	public static Sequence parseISA(IFile isa){
+	public static Assignment parseISA(IFile isa){
 		IPath path = isa.getFullPath();
 		URI uri = isa.getLocationURI();
 		File file = new File(uri);
@@ -78,7 +78,7 @@ public class Sequence {
 			e.printStackTrace(System.err);
 			return null;
 		}
-		Sequence s = handler.getSegment();
+		Assignment s = handler.getSegment();
 		s.prepend(path.segment(0));		
 		return handler.getSegment(); 		
 	}
@@ -113,12 +113,12 @@ public class Sequence {
 		
 		@Override
 		public void endDocument() throws SAXException{
-			seg = new Sequence(isaIntro, isaName, exercises);
+			seg = new Assignment(isaIntro, isaName, exercises);
 		}
 		
-		private Sequence seg;
+		private Assignment seg;
 		
-		public Sequence getSegment(){
+		public Assignment getSegment(){
 			return seg;
 		}
 		
