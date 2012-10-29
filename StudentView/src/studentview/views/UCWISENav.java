@@ -22,6 +22,8 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -89,6 +91,7 @@ public class UCWISENav extends ViewPart{
 		segments.add(s);
 	}
 	
+		
 	public void createPartControl(Composite rootparent) {
 		
 		try {
@@ -110,7 +113,7 @@ public class UCWISENav extends ViewPart{
 		
 		String selectionImage = "";
 		try{
-			String filename = "icons/selection.gif";
+			String filename = "icons/sample.gif";
 			Bundle bun = Platform.getBundle("StudentView");
 			IPath ip = new Path(filename);		
 			URL url = FileLocator.find(bun, ip, null);
@@ -146,59 +149,10 @@ public class UCWISENav extends ViewPart{
 		//isaHolder.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 2, 1));
 		isaHolder.setLayoutData(new RowData());
 		
-		
-		for (Sequence seg : segments){			
-			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg);
-			Group buttons = new Group(parent.group, SWT.SHADOW_NONE);
-		
-			parent.back = new Button(buttons, SWT.ARROW|SWT.LEFT);
-			parent.currentStep = new Label(buttons, SWT.WRAP);
-			parent.next = new Button(buttons, SWT.ARROW|SWT.RIGHT);
-		
-			RowLayout buttonsLO = new RowLayout();
-			buttonsLO.justify = true;
-			buttons.setLayout(buttonsLO);
-			parent.currentStep.setText("Introduction");
-			parent.back.addSelectionListener(parent);
-			parent.next.addSelectionListener(parent);
-		
-			parent.back.setEnabled(false);
+		//Most of the stuff in here has been moved to SequenceWidget
+		for (Sequence seg : segments){
+			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
 			
-			
-			Label intro = new Label(parent.group, SWT.WRAP);
-			intro.setText(seg.getIntro());
-			parent.intro = intro;
-			intro.setLayoutData(new RowData(title.getSize().x, 100));
-		
-			for (Step e : seg.getExercises()){
-				Group stepline = new Group(parent.group, SWT.SHADOW_NONE);
-				Label sel = new Label(stepline, SWT.WRAP);			
-				sel.setImage(selection);
-				sel.setVisible(false);
-				Label step = new Label(stepline, SWT.WRAP); 
-				step.setText(e.getName());
-				step.addMouseListener(parent);			
-			
-				Button test = null;
-				Button reset = null;
-				if (e.getTestname() != null && !("".equalsIgnoreCase(e.getTestname().trim()))){
-					test = new Button(stepline, 0);
-					test.setText("Run Tests");
-					test.addSelectionListener(parent);
-				}
-				
-				if (e.getType() == ExerciseType.EDIT){
-					reset = new Button(stepline, 0);				
-					reset.setText("Reset Exercise");					
-					reset.addSelectionListener(parent);
-				}							
-			
-				stepline.setLayout(new RowLayout());			
-			
-				StepWidgets widge = new StepWidgets(sel, step, e, stepline, test, reset);
-				parent.steps.add(widge);
-			}		
-			parent.group.setLayout(setupLayout());
 			combo.add(seg.getName());
 			isagroups.add(parent);
 		}
@@ -222,7 +176,7 @@ public class UCWISENav extends ViewPart{
 		layout.fill = true;		
 		layout.justify = false;;
 		layout.type = SWT.VERTICAL;
-		layout.spacing = 10;		
+		layout.spacing = 3;		
 		return layout;		
 	}
 
