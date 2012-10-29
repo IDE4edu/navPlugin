@@ -26,11 +26,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 import studentview.model.Step;
-import studentview.model.Sequence;
+import studentview.model.Assignment;
 
 public class SequenceWidget implements SelectionListener, MouseListener {
 
-	Sequence segment;
+	Assignment segment;
 	
 	Label currentStep; 
 	Button next, back;
@@ -44,12 +44,12 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	int onStep = -1;
 	
 	
-	public SequenceWidget(Composite parent, int style, Sequence segment) {
+	public SequenceWidget(Composite parent, int style, Assignment segment) {
 		group = new Group(parent, style);
 		this.segment = segment;		
 	}
 
-	private void openStep(String filename){
+	private void openStep(String filename) {
 		//System.out.println("Trying to open filename: " + filename);
 		Path path = new Path(filename);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
@@ -65,25 +65,25 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	public void widgetSelected(SelectionEvent e) {
 		Object s = e.getSource();
 		
-		if (s == back){					
-			if (onStep == 0){								
+		if (s == back) {					
+			if (onStep == 0) {								
 				gotoStep(null);
-			}else{
+			} else {
 				gotoStep(steps.get(onStep - 1));
 			}
-		}else if(s == next){			
-			if (onStep <= steps.size()){
+		} else if (s == next) {			
+			if (onStep <= steps.size()) {
 				gotoStep(steps.get(onStep + 1));
 			}
-		}else{
-			if (s instanceof Button){
+		} else {
+			if (s instanceof Button) {
 				Button b = (Button)s;
 				StepWidgets w = StepWidgets.widgetFromTest(b, steps);
-				if (w != null){
+				if (w != null) {
 					launch(w.exercise.getTestname());
-				}else{
+				} else {
 					w = StepWidgets.widgetFromReset(b, steps);
-					if (w != null){
+					if (w != null) {
 						//do reset
 					}
 				}
@@ -115,38 +115,38 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		if (e.getSource() == MD) mouseClick(e);		
 	}
 	
-	private void mouseClick(MouseEvent e){
+	private void mouseClick(MouseEvent e) {
 		Object s = e.getSource();
 		
-		if (s instanceof Label){
+		if (s instanceof Label) {
 			StepWidgets widge = StepWidgets.widgetFromTitle((Label)s, steps); 
-			if (widge != null){
+			if (widge != null) {
 				gotoStep(widge);
 			}			
 		}
 	}
 	
 	
-	private void resetIntro(){
+	private void resetIntro() {
 		currentStep.setText("Introduction");
 		intro.setText(segment.getIntro());
 		hideSelections();
 	}
 	
-	private void setToStep(StepWidgets widget){
+	private void setToStep(StepWidgets widget) {
 		currentStep.setText(widget.title.getText());
 		intro.setText(widget.exercise.getIntro());
 		hideSelections();
 		widget.selection.setVisible(true);
 	}
 	
-	private void hideSelections(){
-		for(StepWidgets s : steps){
+	private void hideSelections() {
+		for(StepWidgets s : steps) {
 			s.selection.setVisible(false);
 		}
 	}
 	
-	private void launch(String launcherName){
+	private void launch(String launcherName) {
 		Path path = new Path(launcherName);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		
@@ -155,31 +155,31 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		DebugUITools.launch(config, ILaunchManager.RUN_MODE);		
 	}
 	
-	private void gotoStep(StepWidgets widget){
-		if (widget == null){
+	private void gotoStep(StepWidgets widget) {
+		if (widget == null) {
 			onStep = -1;
-		}else{
+		} else {
 			onStep = steps.indexOf(widget);
 		}
 		
-		if (onStep > -1){
+		if (onStep > -1) {
 			back.setEnabled(true);
-		}else{
+		} else {
 			back.setEnabled(false);
 		}
 		
-		if (onStep + 1 < steps.size()){
+		if (onStep + 1 < steps.size()) {
 			next.setEnabled(true);
-		}else{
+		} else {
 			next.setEnabled(false);
 		}
-		if (widget == null){ //go back to the introduction
+		if (widget == null) { //go back to the introduction
 			resetIntro();
-		}else{ //open up a step
+		} else { //open up a step
 			Step ex = widget.exercise;
-			try{
+			try {
 				openStep(ex.getFilename());
-			}catch (Exception boo){
+			}catch (Exception boo) {
 				boo.printStackTrace(System.err);
 				return;
 			}
