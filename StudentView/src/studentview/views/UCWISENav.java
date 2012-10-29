@@ -188,5 +188,4 @@ public class UCWISENav extends ViewPart{
 	}
 	
 
-	
 }
