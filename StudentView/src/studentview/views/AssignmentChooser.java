@@ -29,6 +29,7 @@ public class AssignmentChooser extends TitleAreaDialog {
   public AssignmentChooser(Shell parentShell) {
     super(parentShell);
     assignments = new ArrayList<Assignment>();
+    System.out.print("in assignmentchooser \n");
 	try {
 		ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {			
 			@Override
@@ -36,7 +37,9 @@ public class AssignmentChooser extends TitleAreaDialog {
 				if (!(resource.getType() == IResource.FILE)) return true;
 				String extension = resource.getFileExtension();
 				if (extension != null) {
-					if (extension.equalsIgnoreCase("isa")) parseISA((IFile)resource);
+					if (extension.equalsIgnoreCase("isa")) {
+						parseISA((IFile)resource);
+					}
 				}
 				return true;
 			}
@@ -77,7 +80,8 @@ public class AssignmentChooser extends TitleAreaDialog {
     	radio.addSelectionListener(new SelectionAdapter() {
     		public void widgetSelected(SelectionEvent e) {
     			//show the Assignment
-    			showAssignment = assignments.get(assignments.indexOf(z));
+    			showAssignment = assignments.get(z);
+    			System.out.print("show assignment: " + showAssignment);
     		}
     	});
     }
@@ -118,10 +122,12 @@ public class AssignmentChooser extends TitleAreaDialog {
     button.setText(label);
     button.setFont(JFaceResources.getDialogFont());
     button.setData(new Integer(id));
+    /*
     button.addSelectionListener(new SelectionAdapter() {
       public void widgetSelected(SelectionEvent event) {
       }
     });
+    */
     if (defaultButton) {
       Shell shell = parent.getShell();
       if (shell != null) {
@@ -142,6 +148,7 @@ public class AssignmentChooser extends TitleAreaDialog {
 		if (s == null) System.err.println("Failed to parse file: " + file.getName());
 		s.getIntro();
 		assignments.add(s);
+		System.out.print("" + assignments + "\n");
 	}
   
   public Assignment getSegment() {

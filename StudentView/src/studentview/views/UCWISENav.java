@@ -72,7 +72,6 @@ public class UCWISENav extends ViewPart{
 	 * The constructor.
 	 */
 	public UCWISENav() {
-		System.out.print("hi");
 	}
 
 	/**
@@ -138,7 +137,7 @@ public class UCWISENav extends ViewPart{
 				dialog.create();
 				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
 					seg = dialog.getSegment();
-					
+					System.out.print("" + seg);
 					final SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg);
 					Group buttons = new Group(parent.group, SWT.SHADOW_NONE);
 
