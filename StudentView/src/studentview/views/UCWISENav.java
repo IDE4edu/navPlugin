@@ -107,28 +107,11 @@ public class UCWISENav extends ViewPart{
 		getAssignment.setEnabled(true);
 		getAssignment.setText("Get Assignment");
 		
-		/*
-		final Combo combo = new Combo(rootparent, SWT.READ_ONLY);
-		
-		combo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int sel = combo.getSelectionIndex();
-				if (sel >= 0 && sel < isagroups.size()) {					
-					stackLayout.topControl = isagroups.get(sel).group;
-					isaHolder.layout();
-				}
-			}
-		});
-		*/
-		
 		isaHolder = new Group(rootparent, SWT.SHADOW_NONE);
 		stackLayout = new StackLayout();
 		isaHolder.setLayout(stackLayout);
-		//isaHolder.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 2, 1));
 		isaHolder.setLayoutData(new RowData());
-		//isaHolder.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-		final Image selection = select;
+		
 		getAssignment.addSelectionListener(new SelectionListener() {
 
 		    public void widgetSelected(SelectionEvent event) {
@@ -137,93 +120,13 @@ public class UCWISENav extends ViewPart{
 				dialog.create();
 				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
 					seg = dialog.getSegment();
-					System.out.print("" + seg);
-					final SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg);
-					Group buttons = new Group(parent.group, SWT.SHADOW_NONE);
-
-					parent.currentStep = new Label(buttons, SWT.WRAP);
-				
-					RowLayout buttonsLO = new RowLayout();
-					buttonsLO.justify = true;
-					buttons.setLayout(buttonsLO);
-				
-					final Label intro = new Label(parent.group, SWT.WRAP);
 					
-					intro.setText(seg.getIntro());
-					parent.intro = intro;
-					intro.setLayoutData(new RowData(title.getSize().x, 70));
 					
-					for (final Step e : seg.getExercises()) {
-						Group stepline = new Group(parent.group, SWT.SHADOW_NONE);
-						Label sel = new Label(stepline, SWT.WRAP);			
-						sel.setImage(selection);
-						sel.setVisible(false);
-						Label step = new Label(stepline, SWT.WRAP); 
-						step.setText(e.getName());
-						step.addMouseListener(parent);
-						
-						Button test = null;
-						Button reset = null;
-						if (e.getTestname() != null && !("".equalsIgnoreCase(e.getTestname().trim()))) {
-							test = new Button(stepline, 0);
-							test.setText("Run Tests");
-							//test.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_YELLOW));
-						}
-						
-						if (e.getType() == ExerciseType.EDIT) {
-							reset = new Button(stepline, 0);				
-							reset.setText("Reset Exercise");
-							//reset.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
-						}							
-					
-						stepline.setLayout(new RowLayout());			
-						
-						final Button showNext = new Button(stepline, SWT.ARROW | SWT.DOWN);
-						final Button showPrev = new Button(stepline, SWT.ARROW | SWT.UP);
-						showNext.setEnabled(true);
-				    	showPrev.setEnabled(false);
-				    	
-				    	final Label intro1 = new Label(parent.group, SWT.WRAP);
-				    	final String nameText = intro1.getText();
-				    	//intro1.setLayoutData(new RowData(intro2.getSize().x, 100));
-				    	
-						showNext.addSelectionListener(new SelectionListener() {
-
-						    public void widgetSelected(SelectionEvent event) {
-						    	showNext.setEnabled(false);
-						    	showPrev.setEnabled(true);
-						    	intro1.setText(e.getIntro());
-						    }
-
-						    public void widgetDefaultSelected(SelectionEvent event) {
-						    	showNext.setEnabled(true);
-						    	showPrev.setEnabled(false);
-						    }
-						});
-						
-						showPrev.addSelectionListener(new SelectionListener() {
-
-							public void widgetSelected(SelectionEvent event) {
-						    	showNext.setEnabled(true);
-						    	showPrev.setEnabled(false);
-						    	intro1.setText(nameText);
-						    }
-
-						    public void widgetDefaultSelected(SelectionEvent event) {
-						  	    showNext.setEnabled(false);
-						    	showPrev.setEnabled(true);
-						    }
-						});
-
-						StepWidgets widge = new StepWidgets(sel, step, e, stepline, test, reset);
-						parent.steps.add(widge);
-						parent.group.setLayout(setupLayout());
-						isagroups.add(parent);
-					}
+					SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg);
+					isagroups.add(parent);
 					
 					if (isagroups.size() > 0) {			
 						stackLayout.topControl = isagroups.get(0).group;
-						//combo.select(0);
 					}
 					
 				}

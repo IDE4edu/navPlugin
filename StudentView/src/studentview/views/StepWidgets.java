@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Label;
 import studentview.model.Step;
 
 public class StepWidgets {
+	Label info;
 	Label selection;
 	Label title;
 	Step exercise;
@@ -19,7 +20,8 @@ public class StepWidgets {
 	Button test;
 	Button reset;
 
-	public StepWidgets(Label selection, Label title, Step exercise, Group group, Button test, Button reset){
+	public StepWidgets(Label selection, Label title, Step exercise, Group group, Button test, Button reset, Label info){
+		this.info = info;
 		this.selection = selection;
 		this.title = title;
 		this.exercise = exercise;
