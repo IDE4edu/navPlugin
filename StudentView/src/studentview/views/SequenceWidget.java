@@ -16,7 +16,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
@@ -53,8 +52,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	int onStep = -1;
 
-	public SequenceWidget(Composite parent, int style, Assignment seg,
-			Image selection) {
+	public SequenceWidget(Composite parent, int style, Assignment seg, Image selection) {
 		group = new Group(parent, style);
 		this.segment = seg;
 
@@ -67,15 +65,12 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		RowLayout buttonsLO = new RowLayout();
 		buttonsLO.justify = true;
 		buttons.setLayout(buttonsLO);
-		// currentStep.setText("Introduction");
 		back.addSelectionListener(this);
 		next.addSelectionListener(this);
-		// currentStep.addMouseListener(parent);
 
 		back.setEnabled(false);
 
 		Label introduction = new Label(group, SWT.WRAP);
-		// intro.setText(seg.getIntro());
 		intro = introduction;
 		introduction.setLayoutData(new RowData(150, 0));
 
@@ -140,14 +135,12 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		layout.pack = true;
 		layout.fill = true;
 		layout.justify = false;
-		;
 		layout.type = SWT.VERTICAL;
 		layout.spacing = 3;
 		return layout;
 	}
 
 	private void openStep(String filename) {
-		// System.out.println("Trying to open filename: " + filename);
 		Path path = new Path(filename);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		IWorkbenchPage page = PlatformUI.getWorkbench()
@@ -181,9 +174,6 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 					launch(w.exercise.getTestname());
 				} else {
 					w = StepWidgets.widgetFromReset(b, steps);
-					if (w != null) {
-						// do reset
-					}
 				}
 			}
 		}
@@ -191,14 +181,11 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	@Override
 	public void widgetDefaultSelected(SelectionEvent e) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void mouseDoubleClick(MouseEvent e) {
-		// TODO Auto-generated method stub
-		// System.out.println("mousedoubleclick");
 	}
 
 	private Object MD;
@@ -235,7 +222,6 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		GridData d = new GridData(0, 0, true, false, 4, 1);
 		d.exclude = false;
 		currentStep.setText(widget.title.getText());
-		// intro.setText(widget.exercise.getIntro());
 		hideSelections();
 		hideInfo();
 		widget.selection.setVisible(true);

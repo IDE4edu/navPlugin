@@ -1,10 +1,8 @@
 package studentview.views;
 
-//Andy Carle, Berkeley Institute of Design, UC Berkeley 
 import java.io.IOException;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Vector;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -26,12 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
-import studentview.model.Step;
 import studentview.model.Assignment;
-import studentview.model.Step.ExerciseType;
-
-import static java.lang.System.out;
-
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -58,7 +51,7 @@ public class UCWISENav extends ViewPart{
 	 */
 	public static final String ID = "studentview.views.SampleView";
 
-	
+
 	Label title;
 	Vector<SequenceWidget> isagroups = new Vector<SequenceWidget>();
 
@@ -78,11 +71,11 @@ public class UCWISENav extends ViewPart{
 	 * This is a callback that will allow us
 	 * to create the viewer and initialize it.
 	 */
-	
+
 	public void createPartControl(Composite rootparent) {
-		
+
 		String selectionImage = "";
-		
+
 		try {
 			String filename = "icons/selection.gif";
 			Bundle bun = Platform.getBundle("StudentView");
@@ -94,68 +87,46 @@ public class UCWISENav extends ViewPart{
 			System.err.println("Could not find image file.");
 			e.printStackTrace();
 		}
-		
+
 		Image select = new Image(rootparent.getDisplay(), selectionImage);
-	
+
 		rootparent.setLayout(setupLayout());
 		rootparent.setLayoutData(rowdata);
-		
+
 		title = new Label(rootparent, SWT.WRAP);
 		title.setText("Assignments");
-		
+
 		Button getAssignment = new Button(rootparent, SWT.PUSH);
 		getAssignment.setEnabled(true);
 		getAssignment.setText("Get Assignment");
-		
-		/*
-		final Combo combo = new Combo(rootparent, SWT.READ_ONLY);
-		
-		combo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				int sel = combo.getSelectionIndex();
-				if (sel >= 0 && sel < isagroups.size()) {					
-					stackLayout.topControl = isagroups.get(sel).group;
-					isaHolder.layout();
-				}
-			}
-		});
-		*/
-		
+
 		isaHolder = new Group(rootparent, SWT.SHADOW_NONE);
 		stackLayout = new StackLayout();
 		isaHolder.setLayout(stackLayout);
-		//isaHolder.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 2, 1));
 		isaHolder.setLayoutData(new RowData());
-		//isaHolder.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_BLUE));
 		final Image selection = select;
+
 		getAssignment.addSelectionListener(new SelectionListener() {
 
-		    public void widgetSelected(SelectionEvent event) {
-		    	Shell shell = new Shell();
+			public void widgetSelected(SelectionEvent event) {
+				Shell shell = new Shell();
 				AssignmentChooser dialog = new AssignmentChooser(shell);
 				dialog.create();
 				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
 					seg = dialog.getSegment();
-					System.out.print("" + seg);
 					SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
 					isagroups.add(parent);
-					
 					if (isagroups.size() > 0) {			
 						stackLayout.topControl = isagroups.get(0).group;
-						//combo.select(0);
 					}
-					
 				}
-		    }
+			}
 
-		    public void widgetDefaultSelected(SelectionEvent event) {
-		    }
+			public void widgetDefaultSelected(SelectionEvent event) {
+			}
 		});
-		
-		//isaHolder.layout();
 	}
-	
+
 	private Layout setupLayout() {
 		RowLayout layout = new RowLayout();
 		layout.wrap = true;
@@ -173,7 +144,5 @@ public class UCWISENav extends ViewPart{
 	public void setFocus() {
 		title.setFocus();
 	}
-	
 
-	
 }

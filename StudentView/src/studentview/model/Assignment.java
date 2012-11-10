@@ -1,7 +1,5 @@
 package studentview.model;
 
-//Andy Carle, Berkeley Institute of Design, UC Berkeley
-
 import java.io.File;
 import java.net.URI;
 import java.util.Vector;
@@ -19,51 +17,40 @@ import org.xml.sax.helpers.DefaultHandler;
 import studentview.model.Step.ExerciseType;
 
 public class Assignment {
-	
+
 	String name;
 	String intro = "";
 	Vector<Step> exercises;	
-	
+
 	Group group;
-	
+
 	public Assignment(String intro, String name, Vector<Step> exercises){
 		this.intro = intro;
 		this.exercises = exercises;
 		this.name = name;
-		
-		
-		/*for (int i = 0; i < count; i++){
-			exercises.add(new Exercise(gen.nextString(), gen.nextString(), ExerciseType.EDIT, gen.nextString(), TestResult.PASSED));
-		}*/
-		
-		//Exercise e = new Exercise("isOK", "/Invariants.InsertionSort/src/InsertionSort.java", ExerciseType.EDIT, "/Invariants.InsertionSort/TEST.isort-1.launch", TestResult.PASSED);
-		//exercises.add(e);
-		
-		//e = new Exercise("Sort Test", "/Invariants.InsertionSort/src/InsertionSort.java", ExerciseType.EDIT, "/Invariants.InsertionSort/TEST.isort-2.launch", TestResult.PASSED);
-		//exercises.add(e);
 	}
-	
+
 	public void prepend(String projectName){
 		for (Step e : exercises) e.prepend(projectName);
 	}
-	
+
 	public String getName(){
 		return name;
 	}
-	
+
 	public String getIntro(){
 		return intro;
 	}
-	
+
 	public void setGroup(Group group){
 		this.group = group;
 	}
-	
+
 	public Group getGroup(){
 		return this.group;
 	}
-	
-	
+
+
 	public static Assignment parseISA(IFile isa){
 		IPath path = isa.getFullPath();
 		URI uri = isa.getLocationURI();
@@ -82,19 +69,19 @@ public class Assignment {
 		s.prepend(path.segment(0));		
 		return handler.getSegment(); 		
 	}
-	
-	
+
+
 	public Vector<Step> getExercises(){
 		return exercises;
 	}
-	
+
 	public Step getExercise(String name){
 		for (Step e : exercises){
 			if (e.getName().equals(name)) return e;
 		}
 		return null;
 	}
-	
+
 	private static class Handler extends DefaultHandler{
 		public static final String isaTag = "isa";
 		public static final String introTag = "intro";
@@ -103,49 +90,46 @@ public class Assignment {
 		public static final String sourceTag = "source";
 		public static final String testTag = "test";
 		public static final String typeTag = "type";
-		
-		
-		
+
 		@Override
 		public void startDocument() throws SAXException{
-			
+
 		}
-		
+
 		@Override
 		public void endDocument() throws SAXException{
 			seg = new Assignment(isaIntro, isaName, exercises);
 		}
-		
+
 		private Assignment seg;
-		
+
 		public Assignment getSegment(){
 			return seg;
 		}
-		
+
 		String isaIntro = "";
 		String isaName = "";
-		
+
 		boolean inExercise = false;
-		
+
 		String name = "";		
 		String intro = "";
 		String source = "";
 		String test = "";
 		ExerciseType type = ExerciseType.EDIT;
-		 
-		
+
+
 		StringBuffer buffer = new StringBuffer();
 		Vector<Step> exercises = new Vector<Step>();
-		
+
 		@Override
 		public void startElement(String namespaceURI, String localName, String qName, Attributes atts) throws SAXException{
 			if (qName.equalsIgnoreCase(exerciseTag)) inExercise = true;			
 		}
-		
+
 		@Override
 		public void endElement(String uri, String localName, String qName) throws SAXException{			
 			String s = buffer.toString().trim();
-			//System.out.println("Ending element: " + qName + " String is: " + s);
 			if (qName.equalsIgnoreCase(exerciseTag)){
 				exercises.add(new Step(name, source, type, test, intro));
 				resetStrings();
@@ -181,17 +165,17 @@ public class Assignment {
 				reset(inExercise);
 			}			
 		}
-		
+
 		@Override
 		public void characters(char[] ch, int start, int length){
 			buffer.append(new String(ch, start, length));
 		}
-		
+
 		private void reset(boolean inEx){
 			buffer = new StringBuffer();
 			inExercise = inEx;			
 		}
-		
+
 		private void resetStrings(){
 			name = "";
 			intro = "";
@@ -199,8 +183,7 @@ public class Assignment {
 			test = "";
 			type = ExerciseType.EDIT;
 		}
-		
+
 	}
-	
 
 }
