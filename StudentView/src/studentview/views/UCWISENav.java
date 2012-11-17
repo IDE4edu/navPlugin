@@ -115,8 +115,8 @@ public class UCWISENav extends ViewPart{
 				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
 					seg = dialog.getSegment();
 					SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
-					isaHolder.layout();
 					stackLayout.topControl = parent.group;
+					isaHolder.layout();
 					title.setText(seg.getName());
 				}
 			}
