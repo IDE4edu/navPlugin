@@ -19,9 +19,6 @@ public class Step {
 	ExerciseType type;
 	TestResult result;
 	
-	
-	
-	
 	public Step(String name, String filename, ExerciseType type, String testname, String intro){
 		this.name = name;
 		this.filename = filename;
@@ -43,9 +40,6 @@ public class Step {
 	public String getIntro(){
 		return intro;
 	}
-
-
-
 
 	public void setName(String name) {
 		this.name = name;
@@ -72,22 +66,13 @@ public class Step {
 		return testname;
 	}
 
-
-
-
 	public void setTestname(String testname) {
 		this.testname = testname;
 	}
 
-
-
-
 	public ExerciseType getType() {
 		return type;
 	}
-
-
-
 
 	public void setType(ExerciseType type) {
 		this.type = type;

@@ -14,7 +14,6 @@ public class ImportAssignment extends TitleAreaDialog {
 
 	public ImportAssignment(Shell parentShell) {
 		super(parentShell);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

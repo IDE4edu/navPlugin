@@ -25,6 +25,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import studentview.model.Assignment;
@@ -33,12 +34,13 @@ public class AssignmentChooser extends TitleAreaDialog {
 
 	private ArrayList<Assignment> assignments;
 	private Assignment showAssignment;
+	private Shell parentShell;
 	
 	
 	public AssignmentChooser(Shell parentShell) {
 		super(parentShell);
 		assignments = new ArrayList<Assignment>();
-		
+		this.parentShell = parentShell;
 		// Get all the assignments currently loaded in student's Eclipse
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {			
@@ -88,7 +90,6 @@ public class AssignmentChooser extends TitleAreaDialog {
 				public void widgetSelected(SelectionEvent e) {
 					//show the Assignment
 					showAssignment = assignments.get(z);
-					System.out.print(showAssignment + "\n");
 					setReturnCode(OK);
 					close();
 				}
