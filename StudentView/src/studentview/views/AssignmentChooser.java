@@ -1,31 +1,22 @@
 package studentview.views;
 
-/*
- * - scroll container for list of isas -- make tall and narrow on left side, 
- * because list could get long?
- * hover over element of isa list should show introtext as well as location on filesystem
- */
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
-import org.eclipse.swt.widgets.Label;
 import java.util.ArrayList;
 
 import org.eclipse.swt.SWT;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
-import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 
 import studentview.model.Assignment;
@@ -34,13 +25,10 @@ public class AssignmentChooser extends TitleAreaDialog {
 
 	private ArrayList<Assignment> assignments;
 	private Assignment showAssignment;
-	private Shell parentShell;
-	
 	
 	public AssignmentChooser(Shell parentShell) {
 		super(parentShell);
 		assignments = new ArrayList<Assignment>();
-		this.parentShell = parentShell;
 		// Get all the assignments currently loaded in student's Eclipse
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {			
