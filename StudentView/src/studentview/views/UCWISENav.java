@@ -105,7 +105,7 @@ public class UCWISENav extends ViewPart{
 		isaHolder.setLayout(stackLayout);
 		isaHolder.setLayoutData(new RowData());
 		final Image selection = select;
-
+		
 		getAssignment.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent event) {
@@ -115,15 +115,15 @@ public class UCWISENav extends ViewPart{
 				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
 					seg = dialog.getSegment();
 					SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
-					isagroups.add(parent);
-					if (isagroups.size() > 0) {			
-						stackLayout.topControl = isagroups.get(0).group;
-					}
+					isaHolder.layout();
+					stackLayout.topControl = parent.group;
+					title.setText(seg.getName());
 				}
 			}
 
 			public void widgetDefaultSelected(SelectionEvent event) {
 			}
+			
 		});
 	}
 
