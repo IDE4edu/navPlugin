@@ -1,3 +1,7 @@
+/* test assignments
+ * html-IDE.openeditor
+ */
+
 package studentview.views;
 
 import org.eclipse.core.resources.IFile;
@@ -78,8 +82,6 @@ public class AssignmentChooser extends TitleAreaDialog {
 				public void widgetSelected(SelectionEvent e) {
 					//show the Assignment
 					showAssignment = assignments.get(z);
-					setReturnCode(OK);
-					close();
 				}
 			});
 		}
@@ -88,6 +90,7 @@ public class AssignmentChooser extends TitleAreaDialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
+		/*
 		Button importButton = new Button(parent, SWT.PUSH);
 		importButton.setText("Import assignment");
 		importButton.addSelectionListener(new SelectionAdapter() {
@@ -98,7 +101,14 @@ public class AssignmentChooser extends TitleAreaDialog {
 				dialog.open();
 			}
 		});
-
+		*/
+		Button okButton = createButton(parent, OK, "Okay", false);
+		okButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				setReturnCode(OK);
+				close();
+			}
+		});
 		// Create Cancel button
 		Button cancelButton = createButton(parent, CANCEL, "Cancel", false);
 		cancelButton.addSelectionListener(new SelectionAdapter() {

@@ -64,15 +64,12 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		RowLayout buttonsLO = new RowLayout();
 		buttonsLO.justify = true;
 		buttons.setLayout(buttonsLO);
-		// currentStep.setText("Introduction");
 		back.addSelectionListener(this);
 		next.addSelectionListener(this);
-		// currentStep.addMouseListener(parent);
 
 		back.setEnabled(false);
 
 		Label introduction = new Label(group, SWT.WRAP);
-		// intro.setText(seg.getIntro());
 		intro = introduction;
 		introduction.setLayoutData(new RowData(150, 0));
 
@@ -144,13 +141,17 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 	private void openStep(String filename) {
-		// System.out.println("Trying to open filename: " + filename);
 		Path path = new Path(filename);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		IWorkbenchPage page = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage();
 		try {
-			IDE.openEditor(page, file);
+			//http://www.eclipse.org/forums/index.php/t/350942/
+			if (filename.contains(".html")) {
+				IDE.openEditor(page, file);
+			} else {
+				IDE.openEditor(page, file);
+			}
 		} catch (PartInitException e) {
 			e.printStackTrace();
 		}
