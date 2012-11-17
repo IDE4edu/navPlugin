@@ -1,42 +1,30 @@
 package studentview.views;
 
-//Andy Carle, Berkeley Institute of Design, UC Berkeley 
-
 import java.io.IOException;
+
 import java.net.URL;
 import java.util.Vector;
-
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
-import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
-import studentview.model.Step;
-import studentview.model.Sequence;
-import studentview.model.Step.ExerciseType;
-
+import studentview.model.Assignment;
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -63,120 +51,90 @@ public class UCWISENav extends ViewPart{
 	 */
 	public static final String ID = "studentview.views.SampleView";
 
-	
+
 	Label title;
-	Vector<Sequence> segments = new Vector<Sequence>();
 	Vector<SequenceWidget> isagroups = new Vector<SequenceWidget>();
-		
+
 	Group hidden;
 	RowData rowdata = new RowData();
 	StackLayout stackLayout;
 	Group isaHolder;
+	Assignment seg;
 
 	/**
 	 * The constructor.
 	 */
 	public UCWISENav() {
-		
 	}
 
 	/**
 	 * This is a callback that will allow us
 	 * to create the viewer and initialize it.
 	 */
-	
-	public void parseISA(IFile file){
-		Sequence s = Sequence.parseISA(file);
-		if (s == null) System.err.println("Failed to parse file: " + file.getName());		
-		segments.add(s);
-	}
-	
-		
+
 	public void createPartControl(Composite rootparent) {
-		
-		try {
-			ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {			
-				@Override
-				public boolean visit(IResource resource) throws CoreException {
-					if (!(resource.getType() == IResource.FILE)) return true;
-					String extension = resource.getFileExtension();
-					if (extension != null){
-						if (extension.equalsIgnoreCase("isa")) parseISA((IFile)resource);
-					}
-					return true;
-				}
-			});
-		} catch (CoreException e1) {
-			System.err.println("Core Exception!!!");
-			e1.printStackTrace();
-		}
-		
+
 		String selectionImage = "";
-		try{
-			String filename = "icons/sample.gif";
+
+		try {
+			String filename = "icons/selection.gif";
 			Bundle bun = Platform.getBundle("StudentView");
 			IPath ip = new Path(filename);		
 			URL url = FileLocator.find(bun, ip, null);
 			URL res = FileLocator.resolve(url);
 			selectionImage = res.getPath();
-		}catch(IOException e){
+		} catch (IOException e) {
 			System.err.println("Could not find image file.");
 			e.printStackTrace();
 		}
-		Image selection = new Image(rootparent.getDisplay(), selectionImage);
-	
+
+		Image select = new Image(rootparent.getDisplay(), selectionImage);
+
 		rootparent.setLayout(setupLayout());
 		rootparent.setLayoutData(rowdata);
-		
+
 		title = new Label(rootparent, SWT.WRAP);
-		title.setText("UCWISE -- Now with more Eclipse");
-		
-		final Combo combo = new Combo(rootparent, SWT.READ_ONLY);
-		combo.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e){
-				int sel = combo.getSelectionIndex();
-				if (sel >= 0 && sel < isagroups.size()){					
-					stackLayout.topControl = isagroups.get(sel).group;
-					isaHolder.layout();
-				}
-			}
-		});
-		
+		title.setText("Assignments");
+
+		Button getAssignment = new Button(rootparent, SWT.PUSH);
+		getAssignment.setEnabled(true);
+		getAssignment.setText("Get Assignment");
+
 		isaHolder = new Group(rootparent, SWT.SHADOW_NONE);
 		stackLayout = new StackLayout();
 		isaHolder.setLayout(stackLayout);
-		//isaHolder.setLayoutData(new GridData(SWT.FILL, SWT.TOP, false, true, 2, 1));
 		isaHolder.setLayoutData(new RowData());
+		final Image selection = select;
 		
-		//Most of the stuff in here has been moved to SequenceWidget
-		for (Sequence seg : segments){
-			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
+		getAssignment.addSelectionListener(new SelectionListener() {
+
+			public void widgetSelected(SelectionEvent event) {
+				Shell shell = new Shell();
+				AssignmentChooser dialog = new AssignmentChooser(shell);
+				dialog.create();
+				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
+					seg = dialog.getSegment();
+					SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
+					isaHolder.layout();
+					stackLayout.topControl = parent.group;
+					title.setText(seg.getName());
+				}
+			}
+
+			public void widgetDefaultSelected(SelectionEvent event) {
+			}
 			
-			combo.add(seg.getName());
-			isagroups.add(parent);
-		}
-		
-		/*for (ISAGroup g : isagroups){
-			g.group.setVisible(false);			
-			((RowData) g.group.getLayoutData()).exclude = true;
-		}*/
-		
-		if (isagroups.size() > 0){			
-			stackLayout.topControl = isagroups.get(0).group;
-			combo.select(0);
-		}
-		isaHolder.layout();
+		});
 	}
-	
-	private Layout setupLayout(){
+
+	private Layout setupLayout() {
 		RowLayout layout = new RowLayout();
 		layout.wrap = true;
 		layout.pack = true;
 		layout.fill = true;		
 		layout.justify = false;;
 		layout.type = SWT.VERTICAL;
-		layout.spacing = 3;		
+		layout.spacing = 10;		
 		return layout;		
 	}
 
@@ -186,6 +144,5 @@ public class UCWISENav extends ViewPart{
 	public void setFocus() {
 		title.setFocus();
 	}
-	
 
 }
