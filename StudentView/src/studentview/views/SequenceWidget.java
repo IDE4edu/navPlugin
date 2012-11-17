@@ -35,12 +35,12 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
 import studentview.model.Step;
-import studentview.model.Sequence;
+import studentview.model.Assignment;
 import studentview.model.Step.ExerciseType;
 
 public class SequenceWidget implements SelectionListener, MouseListener {
 
-	Sequence segment;
+	Assignment segment;
 	
 	Label currentStep; 
 	Button next, back;
@@ -56,7 +56,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	
 	
 	
-	public SequenceWidget(Composite parent, int style, Sequence seg, Image selection) {
+	public SequenceWidget(Composite parent, int style, Assignment seg, Image selection) {
 		group = new Group(parent, style);
 		this.segment = seg;
 		
