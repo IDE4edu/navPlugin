@@ -5,6 +5,8 @@
 
 <plugin>
 
+
+
    <extension
          point="org.eclipse.ui.views">
       <category
@@ -45,5 +47,54 @@
         id="org.eclipse.jdt.launching.javaApplet">
     </launchConfigurationType>
 </extension>
+   <extension
+         point="org.eclipse.ui.viewActions">
+      <viewContribution
+            id="StudentView.viewContribution1"
+            targetID="StudentView.viewContribution1">
+      </viewContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <category
+            description="Commands Related to StudentView"
+            id="StudentView.commands.category"
+            name="StudentView">
+      </category>
+      <command
+            categoryId="StudentView.commands.category"
+            description="Open StudentView with new assignment"
+            id="StudentView.commands.openView"
+            name="Open StudentView">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
+         <toolbar
+               id="StudentView.menus.toolbar">
+            <command
+                  commandId="StudentView.commands.openView"
+                  icon="icons/sample.gif"
+                  id="StudentView.menus.openView"
+                  style="push"
+                  tooltip="Open the StudentView">
+               <visibleWhen
+                     checkEnabled="false">
+               </visibleWhen>
+            </command>
+         </toolbar>
+      </menuContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="studentview.handlers.OpenStudentViewHandler"
+            commandId="StudentView.commands.openView">
+         <activeWhen></activeWhen>
+         <enabledWhen></enabledWhen>
+      </handler>
+   </extension>
 
 </plugin>
