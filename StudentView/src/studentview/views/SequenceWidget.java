@@ -107,7 +107,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			}
 			g = new GridData();
 			g.widthHint = 95;
-			if (e.getType() == ExerciseType.EDIT) {
+			if (e.getType() == ExerciseType.CODE) {
 				reset = new Button(stepline, 0);
 				reset.setText("Reset Exercise");
 				reset.addSelectionListener(this);
@@ -303,3 +303,4 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 }
+

@@ -5,7 +5,7 @@ package studentview.model;
 public class Step {
 
 	public enum ExerciseType{
-		HTML, EDIT
+		HTML, CODE, SELFTEST
 	}
 	
 	public enum TestResult{
@@ -18,9 +18,6 @@ public class Step {
 	String intro = "";
 	ExerciseType type;
 	TestResult result;
-	
-	
-	
 	
 	public Step(String name, String filename, ExerciseType type, String testname, String intro){
 		this.name = name;
@@ -35,7 +32,6 @@ public class Step {
 		if (testname != null && !("".equalsIgnoreCase(testname))) testname = projectname + testname;
 	}
 
-
 	public String getName() {
 		return name;
 	}
@@ -43,16 +39,10 @@ public class Step {
 	public String getIntro(){
 		return intro;
 	}
-
-
-
-
+	
 	public void setName(String name) {
 		this.name = name;
 	}
-
-
-
 
 	public String getFilename() {
 		return filename;
@@ -65,47 +55,27 @@ public class Step {
 		this.filename = filename;
 	}
 
-
-
-
 	public String getTestname() {
 		return testname;
 	}
 
-
-
-
 	public void setTestname(String testname) {
 		this.testname = testname;
 	}
-
-
-
-
+	
 	public ExerciseType getType() {
 		return type;
 	}
-
-
-
 
 	public void setType(ExerciseType type) {
 		this.type = type;
 	}
 
-
-
-
 	public TestResult getResult() {
 		return result;
 	}
-
-
-
-
+	
 	public void setResult(TestResult result) {
 		this.result = result;
 	}
-	
-	
 }

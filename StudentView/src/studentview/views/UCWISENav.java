@@ -105,7 +105,7 @@ public class UCWISENav extends ViewPart{
 		isaHolder.setLayout(stackLayout);
 		isaHolder.setLayoutData(new RowData());
 		final Image selection = select;
-		
+
 		getAssignment.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent event) {
@@ -123,7 +123,7 @@ public class UCWISENav extends ViewPart{
 
 			public void widgetDefaultSelected(SelectionEvent event) {
 			}
-			
+
 		});
 	}
 
@@ -146,3 +146,4 @@ public class UCWISENav extends ViewPart{
 	}
 
 }
+
