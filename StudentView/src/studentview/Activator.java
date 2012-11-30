@@ -7,6 +7,8 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import studentview.model.Step;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -17,6 +19,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+	
+	private Step currentStep;
 	
 	/**
 	 * The constructor
@@ -42,6 +46,13 @@ public class Activator extends AbstractUIPlugin {
 		super.stop(context);
 	}
 
+	public void setCurrentStep(Step s) {
+		currentStep = s;
+	}
+	public Step getCurrentStep() {
+		return currentStep;
+	}
+	
 	/**
 	 * Returns the shared instance
 	 *

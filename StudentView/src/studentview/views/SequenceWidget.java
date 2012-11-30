@@ -50,8 +50,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	int onStep = -1;
 
-	public SequenceWidget(Composite parent, int style, Assignment seg,
-			Image selection) {
+	public SequenceWidget(Composite parent, int style, Assignment seg, Image selection) {
 		group = new Group(parent, style);
 		this.segment = seg;
 

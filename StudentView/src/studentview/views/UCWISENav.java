@@ -24,7 +24,9 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
+import studentview.Activator;
 import studentview.model.Assignment;
+import studentview.controller.AssignmentController;
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -60,6 +62,8 @@ public class UCWISENav extends ViewPart{
 	StackLayout stackLayout;
 	Group isaHolder;
 	Assignment seg;
+	Image selection;
+	Activator plugin;
 
 	/**
 	 * The constructor.
@@ -104,27 +108,31 @@ public class UCWISENav extends ViewPart{
 		stackLayout = new StackLayout();
 		isaHolder.setLayout(stackLayout);
 		isaHolder.setLayoutData(new RowData());
-		final Image selection = select;
+		selection = select;
 		
 		getAssignment.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent event) {
-				Shell shell = new Shell();
-				AssignmentChooser dialog = new AssignmentChooser(shell);
-				dialog.create();
-				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
-					seg = dialog.getSegment();
-					SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
-					stackLayout.topControl = parent.group;
-					isaHolder.layout();
-					title.setText(seg.getName());
-				}
+				chooseAssignment();
 			}
 
 			public void widgetDefaultSelected(SelectionEvent event) {
 			}
 			
 		});
+	}
+	
+	public void chooseAssignment() {
+		Shell shell = new Shell();
+		AssignmentChooser dialog = new AssignmentChooser(shell);
+		dialog.create();
+		if (dialog.open() == org.eclipse.jface.window.Window.OK) {
+			seg = dialog.getSegment();
+			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
+			stackLayout.topControl = parent.group;
+			isaHolder.layout();
+			title.setText(seg.getName());
+		}
 	}
 
 	private Layout setupLayout() {
