@@ -3,25 +3,30 @@ package studentview;
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
 
+import java.util.ArrayList;
+
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import studentview.controller.NavigationListener;
+import studentview.model.Step;
+
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class NavigatorActivator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "StudentView"; //$NON-NLS-1$
 
 	// The shared instance
-	private static Activator plugin;
+	private static NavigatorActivator plugin;
 	
 	/**
 	 * The constructor
 	 */
-	public Activator() {
+	public NavigatorActivator() {
 	}
 
 	/*
@@ -47,7 +52,7 @@ public class Activator extends AbstractUIPlugin {
 	 *
 	 * @return the shared instance
 	 */
-	public static Activator getDefault() {
+	public static NavigatorActivator getDefault() {
 		return plugin;
 	}
 
@@ -61,4 +66,35 @@ public class Activator extends AbstractUIPlugin {
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
+	
+	
+	/////////////////////
+	
+	//EduRideJunitView 
+
+	ArrayList<NavigationListener> listeners;
+	
+	public boolean registerListener(NavigationListener l) {
+		return(listeners.add(l));
+	}
+	
+	public boolean removeListener(NavigationListener l) {
+		return (listeners.remove(l));
+	}
+	
+	// called when the step is changed in the view
+	public void stepChanged(Step newstep){
+		for (NavigationListener l : listeners) {
+			l.stepChanged(newstep);
+		}
+	}
+	
+	// called when the junit test should be run
+	public  void invokeTest(Class<?> testclass){
+		for (NavigationListener l : listeners) {
+			l.invokeTest(testclass);
+		}
+	}
+	
+	
 }

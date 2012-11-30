@@ -88,7 +88,7 @@ public class Assignment {
 		public static final String exerciseTag = "exercise";
 		public static final String nameTag = "name";
 		public static final String sourceTag = "source";
-		public static final String testTag = "test";
+		public static final String testTag = "testClass";
 		public static final String typeTag = "type";
 
 		@Override

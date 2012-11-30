@@ -3,7 +3,7 @@ Bundle-ManifestVersion: 2
 Bundle-Name: StudentView
 Bundle-SymbolicName: StudentView; singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: studentview.Activator
+Bundle-Activator: studentview.NavigatorActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.101",
@@ -15,4 +15,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.junit;bundle-version="3.7.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: studentview.model
+Export-Package: studentview.controller,
+ studentview.model

@@ -14,22 +14,22 @@ public class Step {
 	
 	String name = "";
 	String filename = "";
-	String testname = "";
+	String testclass = "";
 	String intro = "";
 	ExerciseType type;
 	TestResult result;
 	
-	public Step(String name, String filename, ExerciseType type, String testname, String intro){
+	public Step(String name, String filename, ExerciseType type, String testclass, String intro){
 		this.name = name;
 		this.filename = filename;
 		this.type = type;		
-		this.testname = testname;
+		this.testclass = testclass;
 		this.intro = intro;		
 	}
 
 	public void prepend(String projectname){
 		if (filename != null && !("".equalsIgnoreCase(filename))) filename = projectname + filename;
-		if (testname != null && !("".equalsIgnoreCase(testname))) testname = projectname + testname;
+		if (testclass != null && !("".equalsIgnoreCase(testclass))) testclass = projectname + testclass;
 	}
 
 	public String getName() {
@@ -55,13 +55,24 @@ public class Step {
 		this.filename = filename;
 	}
 
-	public String getTestname() {
-		return testname;
+	public boolean hasTestClass() {
+		// it either doesn't exist or is just whitespace
+		return ((testclass != null) && !("".equalsIgnoreCase(testclass.trim())));
+	}
+	
+	public Class<?> getTestClass() {
+		try {
+			return Class.forName(testclass);
+		} catch (ClassNotFoundException e) {
+			// TODO instructors should know about this, becase their test class isn't getting resolved for some reason
+			e.printStackTrace();
+			return null;
+		}
 	}
 
-	public void setTestname(String testname) {
-		this.testname = testname;
-	}
+	//public void setTestname(String testname) {
+	//	this.testclass = testname;
+	//}
 	
 	public ExerciseType getType() {
 		return type;

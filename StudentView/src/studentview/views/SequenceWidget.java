@@ -31,6 +31,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 
+import studentview.NavigatorActivator;
 import studentview.model.Step;
 import studentview.model.Assignment;
 import studentview.model.Step.ExerciseType;
@@ -98,8 +99,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			Button reset = null;
 			g = new GridData();
 			g.widthHint = 75;
-			if (e.getTestname() != null
-					&& !("".equalsIgnoreCase(e.getTestname().trim()))) {
+			if (e.hasTestClass()) {
 				test = new Button(stepline, 0);
 				test.setText("Run Tests");
 				test.addSelectionListener(this);
@@ -176,7 +176,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 				Button b = (Button) s;
 				StepWidgets w = StepWidgets.widgetFromTest(b, steps);
 				if (w != null) {
-					launch(w.exercise.getTestname());
+					NavigatorActivator.getDefault().invokeTest(w.exercise.getTestClass());
 				} else {
 					w = StepWidgets.widgetFromReset(b, steps);
 					if (w != null) {
@@ -260,14 +260,15 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		}
 	}
 
-	private void launch(String launcherName) {
-		Path path = new Path(launcherName);
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-
-		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-		ILaunchConfiguration config = manager.getLaunchConfiguration(file);
-		DebugUITools.launch(config, ILaunchManager.RUN_MODE);
-	}
+//  put this back if you want to use launch configurations again...	
+//	private void launch(String launcherName) {
+//		Path path = new Path(launcherName);
+//		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+//
+//		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+//		ILaunchConfiguration config = manager.getLaunchConfiguration(file);
+//		DebugUITools.launch(config, ILaunchManager.RUN_MODE);
+//	}
 
 	private void gotoStep(StepWidgets widget) {
 		if (widget == null) {
