@@ -72,7 +72,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	
 	//EduRideJunitView 
 
-	ArrayList<NavigationListener> listeners;
+	ArrayList<NavigationListener> listeners = new ArrayList<NavigationListener>();
 	
 	public boolean registerListener(NavigationListener l) {
 		return(listeners.add(l));
@@ -81,6 +81,9 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	public boolean removeListener(NavigationListener l) {
 		return (listeners.remove(l));
 	}
+	
+	
+	
 	
 	// called when the step is changed in the view
 	public void stepChanged(Step newstep){
@@ -96,5 +99,10 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		}
 	}
 	
+	
+	public Step getStepForTestClass(Class<?> testclass) {
+		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(View. "studentview.views.SampleView");
+		return null;
+	}
 	
 }
