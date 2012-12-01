@@ -29,26 +29,27 @@ public class StepWidgets {
 		this.test = test;
 		this.group = group;
 	}
-	
+
 	public static StepWidgets widgetFromTitle(Label title, Vector<StepWidgets> widgets){
 		for (StepWidgets w : widgets){
 			if (w.title == title) return w;
 		}
 		return null;
 	}
-	
+
 	public static StepWidgets widgetFromTest(Button test, Vector<StepWidgets> widgets){
 		for (StepWidgets w : widgets){
 			if (w.test == test) return w;
 		}
 		return null;
 	}
-	
+
 	public static StepWidgets widgetFromReset(Button reset, Vector<StepWidgets> widgets){
 		for (StepWidgets w : widgets){
 			if (w.reset == reset) return w;
 		}
 		return null;
 	}
-	
+
 }
+

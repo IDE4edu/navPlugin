@@ -118,7 +118,7 @@ public class UCWISENav extends ViewPart{
 
 			public void widgetDefaultSelected(SelectionEvent event) {
 			}
-			
+
 		});
 	}
 	
@@ -154,3 +154,4 @@ public class UCWISENav extends ViewPart{
 	}
 
 }
+

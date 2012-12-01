@@ -29,7 +29,7 @@ public class AssignmentChooser extends TitleAreaDialog {
 
 	private ArrayList<Assignment> assignments;
 	private Assignment showAssignment;
-	
+
 	public AssignmentChooser(Shell parentShell) {
 		super(parentShell);
 		assignments = new ArrayList<Assignment>();
@@ -69,14 +69,14 @@ public class AssignmentChooser extends TitleAreaDialog {
 		layout.marginTop = 20;
 		layout.marginLeft = 20;
 		parent.setLayout(layout);
-		
+
 		for (int i = 0; i < assignments.size(); i++) {
-			
+
 			Button radio = new Button(parent, SWT.RADIO);
 			radio.setText(assignments.get(i).getName());
 			radio.setToolTipText(assignments.get(i).getIntro());
 			radio.setEnabled(true);
-			
+
 			final int z = i;
 			radio.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
@@ -135,3 +135,4 @@ public class AssignmentChooser extends TitleAreaDialog {
 		return showAssignment;
 	}
 } 
+
