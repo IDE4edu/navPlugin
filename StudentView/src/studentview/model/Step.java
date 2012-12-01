@@ -14,6 +14,15 @@ public class Step {
 	
 	String name = "";
 	String filename = "";
+	String rawFileName = "";
+	public String getRawFileName() {
+		return rawFileName;
+	}
+
+	public void setRawFileName(String rawFileName) {
+		this.rawFileName = rawFileName;
+	}
+
 	String testclass = "";
 	String intro = "";
 	ExerciseType type;
@@ -22,6 +31,7 @@ public class Step {
 	public Step(String name, String filename, ExerciseType type, String testclass, String intro){
 		this.name = name;
 		this.filename = filename;
+		this.rawFileName = filename;
 		this.type = type;		
 		this.testclass = testclass;
 		this.intro = intro;		

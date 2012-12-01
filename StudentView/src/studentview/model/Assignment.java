@@ -21,6 +21,15 @@ public class Assignment {
 	String name;
 	String intro = "";
 	Vector<Step> exercises;
+	IFile isaFile;
+
+	public IFile getIsaFile() {
+		return isaFile;
+	}
+
+	public void setIsaFile(IFile isaFile) {
+		this.isaFile = isaFile;
+	}
 
 	Group group;
 
@@ -66,6 +75,7 @@ public class Assignment {
 			return null;
 		}
 		Assignment s = handler.getSegment();
+		s.isaFile = isa;
 		s.prepend(path.segment(0));
 		return handler.getSegment();
 	}

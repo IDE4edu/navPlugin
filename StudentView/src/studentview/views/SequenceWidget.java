@@ -1,15 +1,13 @@
 package studentview.views;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.debug.core.DebugPlugin;
-import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.debug.core.ILaunchManager;
-import org.eclipse.debug.ui.DebugUITools;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
@@ -29,11 +27,12 @@ import org.eclipse.swt.widgets.Layout;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.ide.IDE;
 
 import studentview.NavigatorActivator;
-import studentview.model.Step;
 import studentview.model.Assignment;
+import studentview.model.Step;
 import studentview.model.Step.ExerciseType;
 
 public class SequenceWidget implements SelectionListener, MouseListener {
@@ -51,7 +50,8 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	int onStep = -1;
 
-	public SequenceWidget(Composite parent, int style, Assignment seg, Image selection) {
+	public SequenceWidget(Composite parent, int style, Assignment seg,
+			Image selection) {
 		group = new Group(parent, style);
 		this.segment = seg;
 
@@ -141,14 +141,25 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	private void openStep(String filename) {
 		Path path = new Path(filename);
-		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-		IWorkbenchPage page = PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage();
+
 		try {
-			//http://www.eclipse.org/forums/index.php/t/350942/
+			// http://www.eclipse.org/forums/index.php/t/350942/
 			if (filename.contains(".html")) {
-				IDE.openEditor(page, file);
+				final IWebBrowser browser = PlatformUI.getWorkbench()
+						.getBrowserSupport().createBrowser(filename);
+    
+					URI base = segment.getIsaFile().getProject().getLocationURI();
+					try {
+						browser.openURL(new URL(base.toString() + "/" + filename));
+					} catch (MalformedURLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 			} else {
+				IFile file = ResourcesPlugin.getWorkspace().getRoot()
+						.getFile(path);
+				IWorkbenchPage page = PlatformUI.getWorkbench()
+						.getActiveWorkbenchWindow().getActivePage();
 				IDE.openEditor(page, file);
 			}
 		} catch (PartInitException e) {
@@ -175,7 +186,8 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 				Button b = (Button) s;
 				StepWidgets w = StepWidgets.widgetFromTest(b, steps);
 				if (w != null) {
-					NavigatorActivator.getDefault().invokeTest(w.exercise.getTestClass());
+					NavigatorActivator.getDefault().invokeTest(
+							w.exercise.getTestClass());
 				} else {
 					w = StepWidgets.widgetFromReset(b, steps);
 					if (w != null) {
@@ -259,15 +271,15 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		}
 	}
 
-//  put this back if you want to use launch configurations again...	
-//	private void launch(String launcherName) {
-//		Path path = new Path(launcherName);
-//		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-//
-//		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-//		ILaunchConfiguration config = manager.getLaunchConfiguration(file);
-//		DebugUITools.launch(config, ILaunchManager.RUN_MODE);
-//	}
+	// put this back if you want to use launch configurations again...
+	// private void launch(String launcherName) {
+	// Path path = new Path(launcherName);
+	// IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+	//
+	// ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+	// ILaunchConfiguration config = manager.getLaunchConfiguration(file);
+	// DebugUITools.launch(config, ILaunchManager.RUN_MODE);
+	// }
 
 	private void gotoStep(StepWidgets widget) {
 		if (widget == null) {
@@ -292,7 +304,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		} else { // open up a step
 			Step ex = widget.exercise;
 			try {
-				openStep(ex.getFilename());
+				openStep(ex.getRawFileName());
 			} catch (Exception boo) {
 				boo.printStackTrace(System.err);
 				return;
@@ -303,4 +315,3 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 }
-
