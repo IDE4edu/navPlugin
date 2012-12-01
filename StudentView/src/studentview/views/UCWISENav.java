@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
-import studentview.Activator;
+import studentview.NavigatorActivator;
 import studentview.model.Assignment;
 import studentview.controller.AssignmentController;
 
@@ -63,12 +63,13 @@ public class UCWISENav extends ViewPart{
 	Group isaHolder;
 	Assignment seg;
 	Image selection;
-	Activator plugin;
+	NavigatorActivator plugin;
 
 	/**
 	 * The constructor.
 	 */
 	public UCWISENav() {
+		plugin = NavigatorActivator.getDefault();
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package studentview.views;
 
+import java.net.URL;
 import java.util.Vector;
 
 import org.eclipse.core.resources.IFile;
@@ -71,7 +72,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 		Label introduction = new Label(group, SWT.WRAP);
 		intro = introduction;
-		introduction.setLayoutData(new RowData(150, 0));
+		introduction.setLayoutData(new RowData(150, 100));
 
 		for (Step e : seg.getExercises()) {
 			GridData g = new GridData();
@@ -88,7 +89,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			sel.setVisible(false);
 			sel.setLayoutData(g);
 			g = new GridData();
-			g.widthHint = 100;
+			g.widthHint = 150;
 			Label step = new Label(stepline, SWT.WRAP);
 			step.setText(e.getName());
 			step.addMouseListener(this);
@@ -97,20 +98,20 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			Button test = null;
 			Button reset = null;
 			g = new GridData();
+			g = new GridData();
+			g.widthHint = 100;
+			if (e.getType() == ExerciseType.CODE) {
+				reset = new Button(stepline, 0);
+				reset.setText("Reset Exercise");
+				reset.addSelectionListener(this);
+				reset.setLayoutData(g);
+			}
 			g.widthHint = 75;
 			if (e.hasTestClass()) {
 				test = new Button(stepline, 0);
 				test.setText("Run Tests");
 				test.addSelectionListener(this);
 				test.setLayoutData(g);
-			}
-			g = new GridData();
-			g.widthHint = 95;
-			if (e.getType() == ExerciseType.CODE) {
-				reset = new Button(stepline, 0);
-				reset.setText("Reset Exercise");
-				reset.addSelectionListener(this);
-				reset.setLayoutData(g);
 			}
 
 			GridData d = new GridData(0, 0, true, false, 4, 0);
@@ -124,6 +125,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 					reset, get);
 			steps.add(widge);
 		}
+		intro.moveBelow(null);
 		group.setLayout(setupLayout());
 	}
 
@@ -133,23 +135,27 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		layout.pack = true;
 		layout.fill = true;
 		layout.justify = false;
-		;
 		layout.type = SWT.VERTICAL;
 		layout.spacing = 3;
 		return layout;
 	}
 
-	private void openStep(String filename) {
+	private void openStep(Step step) {
+		String filename = step.getFilename();
 		Path path = new Path(filename);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		IWorkbenchPage page = PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage();
 		try {
 			//http://www.eclipse.org/forums/index.php/t/350942/
-			if (filename.contains(".html")) {
+			if (step.getType().equals(ExerciseType.CODE)) {
 				IDE.openEditor(page, file);
-			} else {
-				IDE.openEditor(page, file);
+			} else if (step.getType().equals(ExerciseType.HTML)){
+				try {
+					PlatformUI.getWorkbench().getBrowserSupport().createBrowser("UCWise Nav").openURL(new URL(filename));
+				} catch (Exception e){
+					
+				}
 			}
 		} catch (PartInitException e) {
 			e.printStackTrace();
@@ -292,7 +298,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		} else { // open up a step
 			Step ex = widget.exercise;
 			try {
-				openStep(ex.getFilename());
+				openStep(ex);
 			} catch (Exception boo) {
 				boo.printStackTrace(System.err);
 				return;
