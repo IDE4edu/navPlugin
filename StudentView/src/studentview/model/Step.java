@@ -4,17 +4,18 @@ package studentview.model;
 
 public class Step {
 
-	public enum ExerciseType{
+	public enum ExerciseType {
 		HTML, CODE, SELFTEST
 	}
-	
-	public enum TestResult{
+
+	public enum TestResult {
 		NOTTRIED, FAILED, PASSED
 	}
-	
+
 	String name = "";
 	String filename = "";
 	String rawFileName = "";
+
 	public String getRawFileName() {
 		return rawFileName;
 	}
@@ -27,30 +28,33 @@ public class Step {
 	String intro = "";
 	ExerciseType type;
 	TestResult result;
-	
-	public Step(String name, String filename, ExerciseType type, String testclass, String intro){
+
+	public Step(String name, String filename, ExerciseType type,
+			String testclass, String intro) {
 		this.name = name;
 		this.filename = filename;
 		this.rawFileName = filename;
-		this.type = type;		
+		this.type = type;
 		this.testclass = testclass;
-		this.intro = intro;		
+		this.intro = intro;
 	}
 
-	public void prepend(String projectname){
-		if (filename != null && !("".equalsIgnoreCase(filename))) filename = projectname + filename;
-		//testclass is a class not a file..., just needs the package
-		//if (testclass != null && !("".equalsIgnoreCase(testclass))) testclass = projectname + testclass;
+	public void prepend(String projectname) {
+		if (filename != null && !("".equalsIgnoreCase(filename)))
+			filename = projectname + filename;
+		// testclass is a class not a file..., just needs the package
+		// if (testclass != null && !("".equalsIgnoreCase(testclass))) testclass
+		// = projectname + testclass;
 	}
 
 	public String getName() {
 		return name;
 	}
-	
-	public String getIntro(){
+
+	public String getIntro() {
 		return intro;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -58,9 +62,6 @@ public class Step {
 	public String getFilename() {
 		return filename;
 	}
-
-
-
 
 	public void setFilename(String filename) {
 		this.filename = filename;
@@ -70,21 +71,23 @@ public class Step {
 		// it either doesn't exist or is just whitespace
 		return ((testclass != null) && !("".equalsIgnoreCase(testclass.trim())));
 	}
-	
+
 	public Class<?> getTestClass() {
 		try {
-			return Class.forName(testclass);
+			Class<?> c = Class.forName(testclass);
+			return c;
 		} catch (ClassNotFoundException e) {
-			// TODO instructors should know about this, becase their test class isn't getting resolved for some reason
+			// TODO instructors should know about this, becase their test class
+			// isn't getting resolved for some reason
 			e.printStackTrace();
 			return null;
 		}
 	}
 
-	//public void setTestname(String testname) {
-	//	this.testclass = testname;
-	//}
-	
+	// public void setTestname(String testname) {
+	// this.testclass = testname;
+	// }
+
 	public ExerciseType getType() {
 		return type;
 	}
@@ -96,7 +99,7 @@ public class Step {
 	public TestResult getResult() {
 		return result;
 	}
-	
+
 	public void setResult(TestResult result) {
 		this.result = result;
 	}
