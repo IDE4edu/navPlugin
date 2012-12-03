@@ -39,7 +39,8 @@ public class Step {
 
 	public void prepend(String projectname){
 		if (filename != null && !("".equalsIgnoreCase(filename))) filename = projectname + filename;
-		if (testclass != null && !("".equalsIgnoreCase(testclass))) testclass = projectname + testclass;
+		//testclass is a class not a file..., just needs the package
+		//if (testclass != null && !("".equalsIgnoreCase(testclass))) testclass = projectname + testclass;
 	}
 
 	public String getName() {
