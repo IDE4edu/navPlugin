@@ -72,6 +72,10 @@ public class UCWISENav extends ViewPart{
 		plugin = NavigatorActivator.getDefault();
 	}
 
+	public Assignment getCurrentAssignment() {
+		return seg;
+	}
+	
 	/**
 	 * This is a callback that will allow us
 	 * to create the viewer and initialize it.
@@ -133,6 +137,7 @@ public class UCWISENav extends ViewPart{
 			stackLayout.topControl = parent.group;
 			isaHolder.layout();
 			title.setText(seg.getName());
+			isaHolder.redraw();
 		}
 	}
 

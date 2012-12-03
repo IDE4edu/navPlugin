@@ -287,6 +287,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			onStep = -1;
 		} else {
 			onStep = steps.indexOf(widget);
+			NavigatorActivator.getDefault().stepChanged(widget.getExercise());
 		}
 
 		if (onStep > -1) {

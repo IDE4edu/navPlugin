@@ -6,11 +6,14 @@ package studentview;
 import java.util.ArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import studentview.controller.NavigationListener;
 import studentview.model.Step;
+import studentview.views.UCWISENav;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -75,7 +78,8 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	ArrayList<NavigationListener> listeners = new ArrayList<NavigationListener>();
 	
 	public boolean registerListener(NavigationListener l) {
-		return(listeners.add(l));
+		boolean result = listeners.add(l);
+		return(result);
 	}
 	
 	public boolean removeListener(NavigationListener l) {
@@ -101,7 +105,8 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	
 	
 	public Step getStepForTestClass(Class<?> testclass) {
-		//PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView(View. "studentview.views.SampleView");
+		UCWISENav v = (UCWISENav) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().findView("studentview.views.SampleView");
+		
 		return null;
 	}
 	

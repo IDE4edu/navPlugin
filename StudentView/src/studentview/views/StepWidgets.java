@@ -50,6 +50,11 @@ public class StepWidgets {
 		}
 		return null;
 	}
+	
+	
+	public Step getExercise() {
+		return exercise;
+	}	
 
 }
 
