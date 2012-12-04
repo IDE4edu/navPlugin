@@ -10,13 +10,13 @@
    <extension
          point="org.eclipse.ui.views">
       <category
-            name="UCWISE"
-            id="UCWISE">
+            name="EduRide"
+            id="edurideViewCategory">
       </category>
       <view
-            name="UCWISE Nav"
-            icon="icons/sample.gif"
-            category="UCWISE"
+            name="EduRide Navigator"
+            icon="icons/car-red.gif"
+            category="edurideViewCategory"
             class="studentview.views.UCWISENav"
             id="studentview.views.SampleView">
       </view>
