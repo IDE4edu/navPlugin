@@ -4,15 +4,56 @@ package studentview.model;
 
 public class Step {
 
+	// / TYPE of step
 	public enum ExerciseType {
-		HTML, CODE, SELFTEST
+		HTML, CODE, SELFTEST, UNKNOWN
 	}
 
+	public boolean isHTML() {
+		return type.equals(ExerciseType.HTML);
+	}
+	
+	public boolean isCODE() {
+		return type.equals(ExerciseType.CODE);
+	}
+	
+	public boolean isSELFTEST() {
+		return type.equals(ExerciseType.SELFTEST);
+	}
+	
+	public boolean isUNKNOWN() {
+		return type.equals(ExerciseType.UNKNOWN);
+	}
+	
+
+	public boolean openWithJavaEditor() {
+		return isCODE();
+	}
+
+	public boolean openWithBrowser() {
+		return (isHTML() || isSELFTEST());
+
+	}
+
+	// ///// RESULT of test
 	public enum TestResult {
 		NOTTRIED, FAILED, PASSED
 	}
 
-	String name = "";
+	public TestResult getResult() {
+		return result;
+	}
+
+	public void setResult(TestResult result) {
+		this.result = result;
+	}
+
+	private String name = "";
+
+	public String getName() {
+		return name;
+	}
+
 	String filename = "";
 	String rawFileName = "";
 
@@ -47,16 +88,8 @@ public class Step {
 		// = projectname + testclass;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public String getIntro() {
 		return intro;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String getFilename() {
@@ -73,13 +106,19 @@ public class Step {
 	}
 
 	public Class<?> getTestClass() {
-		try {
-			Class<?> c = Class.forName(testclass);
-			return c;
-		} catch (ClassNotFoundException e) {
-			// TODO instructors should know about this, becase their test class
-			// isn't getting resolved for some reason
-			e.printStackTrace();
+		if ((testclass != null) && (testclass != "")) {
+			try {
+				Class<?> c = Class.forName(testclass);
+				return c;
+			} catch (ClassNotFoundException e) {
+				// TODO instructors should know about this, becase their test
+				// class
+				// isn't getting resolved for some reason
+				System.err.println("Unable to determine test class \""
+						+ testclass + "\" for step titled: " + name);
+				return null;
+			}
+		} else {
 			return null;
 		}
 	}
@@ -88,19 +127,4 @@ public class Step {
 	// this.testclass = testname;
 	// }
 
-	public ExerciseType getType() {
-		return type;
-	}
-
-	public void setType(ExerciseType type) {
-		this.type = type;
-	}
-
-	public TestResult getResult() {
-		return result;
-	}
-
-	public void setResult(TestResult result) {
-		this.result = result;
-	}
 }

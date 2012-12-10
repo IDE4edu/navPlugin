@@ -45,7 +45,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	StyledText junit;
 
 	Group group;
-
+	
 	Vector<StepWidgets> steps = new Vector<StepWidgets>();
 
 	int onStep = -1;
@@ -99,7 +99,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			g = new GridData();
 			g = new GridData();
 			g.widthHint = 100;
-			if (e.getType() == ExerciseType.CODE) {
+			if (e.isCODE()) {
 				reset = new Button(stepline, 0);
 				reset.setText("Reset Exercise");
 				reset.addSelectionListener(this);
@@ -141,31 +141,38 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	private void openStep(Step step) {
 		String filename = step.getFilename();
+		String localFilename = step.getRawFileName();
 		Path path = new Path(filename);
 
-		try {
+
 			//http://www.eclipse.org/forums/index.php/t/350942/
-			if (step.getType().equals(ExerciseType.CODE)) {
+			if (step.openWithJavaEditor()) {
 				IFile file = ResourcesPlugin.getWorkspace().getRoot()
 						.getFile(path);
 				IWorkbenchPage page = PlatformUI.getWorkbench()
 						.getActiveWorkbenchWindow().getActivePage();
-				IDE.openEditor(page, file);
-			} else if (step.getType().equals(ExerciseType.HTML)){
-				final IWebBrowser browser = PlatformUI.getWorkbench()
-						.getBrowserSupport().createBrowser(filename);
-
-				URI base = segment.getIsaFile().getProject().getLocationURI();
 				try {
-					browser.openURL(new URL(base.toString() + "/" + filename));
-				} catch (MalformedURLException e) {
+					IDE.openEditor(page, file);
+				} catch (PartInitException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				
+			} else if (step.openWithBrowser()){
+
+				URI base = segment.getIsaFile().getProject().getLocationURI();
+				try {
+					URL url = new URL(base.toString() + localFilename);
+					NavigatorActivator.getDefault().getBrowser().openURL(url);
+				} catch (MalformedURLException e) {
+					// TODO URL didn't get made right
+					e.printStackTrace();
+				} catch (PartInitException e) {
+					// TODO openURL didn't work
+					e.printStackTrace();
+				}
 			}
-		} catch (PartInitException e) {
-			e.printStackTrace();
-		}
+
 	}
 
 	@Override

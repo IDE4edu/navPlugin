@@ -7,9 +7,13 @@ import java.util.ArrayList;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleEvent;
+import org.osgi.framework.BundleListener;
 
 import studentview.controller.NavigationListener;
 import studentview.model.Step;
@@ -26,6 +30,9 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	// The shared instance
 	private static NavigatorActivator plugin;
 	
+	private IWebBrowser browser;
+
+	
 	/**
 	 * The constructor
 	 */
@@ -38,7 +45,17 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		//context.
 		plugin = this;
+		
+
+		try {
+			browser = PlatformUI.getWorkbench().getBrowserSupport().createBrowser(PLUGIN_ID);
+		} catch (PartInitException e) {
+			// TODO uh oh
+			e.printStackTrace();
+		}
+		
 	}
 
 	/*
@@ -70,6 +87,13 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		return imageDescriptorFromPlugin(PLUGIN_ID, path);
 	}
 	
+	
+	
+	////////////////////////
+	
+	public IWebBrowser getBrowser() {
+		return browser;
+	}
 	
 	/////////////////////
 	

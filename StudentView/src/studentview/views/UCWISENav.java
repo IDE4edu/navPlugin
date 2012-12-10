@@ -21,6 +21,9 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Layout;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.part.ViewPart;
 import org.osgi.framework.Bundle;
 
@@ -65,6 +68,8 @@ public class UCWISENav extends ViewPart{
 	Image selection;
 	NavigatorActivator plugin;
 
+
+
 	/**
 	 * The constructor.
 	 */
@@ -97,6 +102,7 @@ public class UCWISENav extends ViewPart{
 			e.printStackTrace();
 		}
 
+		
 		Image select = new Image(rootparent.getDisplay(), selectionImage);
 
 		rootparent.setLayout(setupLayout());
