@@ -90,7 +90,25 @@ public class AssignmentChooser extends TitleAreaDialog {
 
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		/*
+		
+		// Create Okay button
+		Button okButton = createButton(parent, OK, "Okay", false);
+		okButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				setReturnCode(OK);
+				close();
+			}
+		});
+		
+		// Create Cancel button
+		Button cancelButton = createButton(parent, CANCEL, "Cancel", false);
+		cancelButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				setReturnCode(CANCEL);
+				close();
+			}
+		});
+		
 		Button importButton = new Button(parent, SWT.PUSH);
 		importButton.setText("Import assignment");
 		importButton.addSelectionListener(new SelectionAdapter() {
@@ -101,22 +119,7 @@ public class AssignmentChooser extends TitleAreaDialog {
 				dialog.open();
 			}
 		});
-		*/
-		Button okButton = createButton(parent, OK, "Okay", false);
-		okButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-				setReturnCode(OK);
-				close();
-			}
-		});
-		// Create Cancel button
-		Button cancelButton = createButton(parent, CANCEL, "Cancel", false);
-		cancelButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				setReturnCode(CANCEL);
-				close();
-			}
-		});
+		
 	}
 
 	@Override
