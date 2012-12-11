@@ -51,7 +51,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	Group group;
 	
-	Vector<StepWidgets> steps = new Vector<StepWidgets>();
+	Vector<StepWidget> steps = new Vector<StepWidget>();
 
 	int onStep = -1;
 
@@ -128,7 +128,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			get.setVisible(false);
 			get.setLayoutData(d);
 
-			StepWidgets widge = new StepWidgets(sel, step, e, stepline, test,
+			StepWidget widge = new StepWidget(sel, step, e, stepline, test,
 					reset, get);
 			steps.add(widge);
 		}
@@ -148,13 +148,14 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 	private void openStep(Step step) {
-		String filename = step.getFullSourcePath();
-		Path path = new Path(filename);
+
+
 		
-		String localFilename = step.getWithinProjectSourcePath();
+
 
 			//http://www.eclipse.org/forums/index.php/t/350942/
 			if (step.openWithJavaEditor()) {
+				Path path = new Path(step.getProjectName() + step.getSource());
 				IFile file = ResourcesPlugin.getWorkspace().getRoot()
 						.getFile(path);
 				IWorkbenchPage page = PlatformUI.getWorkbench()
@@ -167,16 +168,23 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 				}
 				
 			} else if (step.openWithBrowser()){
-
-				URI base = segment.getIsaFile().getProject().getLocationURI();
 				try {
-					URL url = new URL(base.toString() + localFilename);
+					URL url;
+					if (step.sourceIsProjectLocal()) {
+						// gotta find the location on disk
+						URI base = segment.getIsaFile().getProject().getLocationURI();
+						url = new URL(base.toString() + step.getSource());
+					} else {
+						// source is absolute -- already a url probably
+						url = new URL(step.getSource());
+					}
 					NavigatorActivator.getDefault().getBrowser().openURL(url);
+					
 				} catch (MalformedURLException e) {
-					// TODO URL didn't get made right
+					System.err.println("Whoops, bad url.  Couldn't make it from " + step.getSource());
 					e.printStackTrace();
 				} catch (PartInitException e) {
-					// TODO openURL didn't work
+					System.err.println("Couldn't open the URL from <source>" + step.getSource());
 					e.printStackTrace();
 				}
 			}
@@ -200,14 +208,15 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		} else {*/
 			if (s instanceof Button) {
 				Button b = (Button) s;
-				StepWidgets w = StepWidgets.widgetFromTest(b, steps);
+				StepWidget w = StepWidget.widgetFromTest(b, steps);
 				// if you click the button, you go to that step now.
 				gotoStep(w);
 				if (w != null) {
-					launch(w.exercise.getLaunchConfig());
+					String launchConfig = w.exercise.getProjectName() + w.exercise.getLaunchConfig();
+					launch(launchConfig);
 					//NavigatorActivator.getDefault().invokeTest(w.exercise.getTestClass());
 				} else {
-					w = StepWidgets.widgetFromReset(b, steps);
+					w = StepWidget.widgetFromReset(b, steps);
 					if (w != null) {
 						// do reset
 					}
@@ -245,7 +254,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		Object s = e.getSource();
 
 		if (s instanceof Label) {
-			StepWidgets widge = StepWidgets.widgetFromTitle((Label) s, steps);
+			StepWidget widge = StepWidget.widgetFromTitle((Label) s, steps);
 			if (widge != null) {
 				gotoStep(widge);
 			}
@@ -258,8 +267,8 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		hideSelections();
 	}
 
-	private void setToStep(StepWidgets widget) {
-		GridData d = new GridData(0, 0, true, false, 4, 1);
+	private void setToStep(StepWidget widget) {
+		GridData d = new GridData(0, 0, false, false, 4, 1);
 		d.exclude = false;
 		//currentStep.setText(widget.title.getText());
 		// intro.setText(widget.exercise.getIntro());
@@ -268,13 +277,13 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		widget.selection.setVisible(true);
 		widget.info.setVisible(true);
 		widget.info.setLayoutData(d);
-		group.layout();
+		group.layout(true, true);
 	}
 
 	private void hideSelections() {
-		for (StepWidgets s : steps) {
+		for (StepWidget s : steps) {
 			s.selection.setVisible(false);
-			GridData d = new GridData(0, 0, true, false, 4, 1);
+			GridData d = new GridData(0, 0, false, false, 4, 1);
 			d.exclude = true;
 			s.info.setVisible(true);
 			s.info.setLayoutData(d);
@@ -284,7 +293,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 	private void hideInfo() {
-		for (StepWidgets s : steps) {
+		for (StepWidget s : steps) {
 			s.info.setVisible(false);
 		}
 	}
@@ -303,7 +312,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		DebugUITools.launch(config, mode);
 	}
 
-	private void gotoStep(StepWidgets widget) {
+	public void gotoStep(StepWidget widget) {
 		if (widget == null) {
 			onStep = -1;
 		} else {

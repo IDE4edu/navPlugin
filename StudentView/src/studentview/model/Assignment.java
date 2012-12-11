@@ -18,6 +18,7 @@ import studentview.model.Step.ExerciseType;
 
 public class Assignment implements Comparable<Assignment> {
 
+	String projectName;
 	String name;
 	String intro = "";
 	String category;
@@ -36,8 +37,9 @@ public class Assignment implements Comparable<Assignment> {
 
 	Group group;
 
-	public Assignment(String intro, String name, Vector<Step> exercises,
+	public Assignment(String projectName, String intro, String name, Vector<Step> exercises,
 			String category, String subCategory, String sortOrder) {
+		this.projectName = projectName;
 		this.intro = intro;
 		this.exercises = exercises;
 		this.name = name;
@@ -63,11 +65,6 @@ public class Assignment implements Comparable<Assignment> {
 		} else {
 			return AFTER;
 		}
-	}
-	
-	public void prependProjectName(String projectName) {
-		for (Step e : exercises)
-			e.prependProjectName(projectName);
 	}
 
 	public String getName() {
@@ -96,6 +93,7 @@ public class Assignment implements Comparable<Assignment> {
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			handler = new Handler();
+			handler.projectName = projectName;
 			saxParser.parse(file, handler);
 		} catch (Exception e) {
 			e.printStackTrace(System.err);
@@ -103,7 +101,6 @@ public class Assignment implements Comparable<Assignment> {
 		}
 		Assignment s = handler.getAssignment();
 		s.isaFile = isa;
-		s.prependProjectName(projectName);
 		return handler.getAssignment();
 	}
 
@@ -140,10 +137,11 @@ public class Assignment implements Comparable<Assignment> {
 
 		@Override
 		public void endDocument() throws SAXException {
-			assign = new Assignment(isaIntro, isaName, exercises, isaCategory, isaSubCategory, isaSortOrder);
+			assign = new Assignment(projectName, isaIntro, isaName, exercises, isaCategory, isaSubCategory, isaSortOrder);
 		}
 
 		private Assignment assign;
+		public String projectName;
 
 		public Assignment getAssignment() {
 			return assign;
@@ -193,7 +191,7 @@ public class Assignment implements Comparable<Assignment> {
 				throws SAXException {
 			String s = buffer.toString().trim();
 			if (qName.equalsIgnoreCase(exerciseTag)) {
-				exercises.add(new Step(name, source, type, intro, testclass,
+				exercises.add(new Step(projectName, name, source, type, intro, testclass,
 						launch, launchButtonName));
 				reset(false);
 			} else if (!inExercise) {

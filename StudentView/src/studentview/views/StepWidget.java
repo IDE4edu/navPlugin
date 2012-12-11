@@ -10,7 +10,7 @@ import org.eclipse.swt.widgets.Label;
 
 import studentview.model.Step;
 
-public class StepWidgets {
+public class StepWidget {
 	Label info;
 	Label selection;
 	Label title;
@@ -20,7 +20,7 @@ public class StepWidgets {
 	Button test;
 	Button reset;
 
-	public StepWidgets(Label selection, Label title, Step exercise, Group group, Button test, Button reset, Label info){
+	public StepWidget(Label selection, Label title, Step exercise, Group group, Button test, Button reset, Label info){
 		this.info = info;
 		this.selection = selection;
 		this.title = title;
@@ -30,22 +30,22 @@ public class StepWidgets {
 		this.group = group;
 	}
 
-	public static StepWidgets widgetFromTitle(Label title, Vector<StepWidgets> widgets){
-		for (StepWidgets w : widgets){
+	public static StepWidget widgetFromTitle(Label title, Vector<StepWidget> widgets){
+		for (StepWidget w : widgets){
 			if (w.title == title) return w;
 		}
 		return null;
 	}
 
-	public static StepWidgets widgetFromTest(Button test, Vector<StepWidgets> widgets){
-		for (StepWidgets w : widgets){
+	public static StepWidget widgetFromTest(Button test, Vector<StepWidget> widgets){
+		for (StepWidget w : widgets){
 			if (w.test == test) return w;
 		}
 		return null;
 	}
 
-	public static StepWidgets widgetFromReset(Button reset, Vector<StepWidgets> widgets){
-		for (StepWidgets w : widgets){
+	public static StepWidget widgetFromReset(Button reset, Vector<StepWidget> widgets){
+		for (StepWidget w : widgets){
 			if (w.reset == reset) return w;
 		}
 		return null;

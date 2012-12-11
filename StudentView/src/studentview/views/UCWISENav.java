@@ -125,6 +125,8 @@ public class UCWISENav extends ViewPart{
 
 			public void widgetSelected(SelectionEvent event) {
 				chooseAssignment();
+				// reset the layout for the new controls
+				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().layout(true, true);
 			}
 
 			public void widgetDefaultSelected(SelectionEvent event) {
@@ -143,8 +145,10 @@ public class UCWISENav extends ViewPart{
 			stackLayout.topControl = parent.group;
 			isaHolder.layout();
 			title.setText(seg.getName());
-			isaHolder.redraw();
-			//this.getSite();
+			
+			// select first step
+			StepWidget first = parent.steps.firstElement();
+			parent.gotoStep(first);
 		}
 	}
 

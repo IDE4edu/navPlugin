@@ -113,16 +113,16 @@ public class AssignmentChooser extends TitleAreaDialog {
 			}
 		});
 		
-		Button importButton = new Button(parent, SWT.PUSH);
-		importButton.setText("Import assignment");
-		importButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				Shell shell = new Shell();
-				ImportAssignment dialog = new ImportAssignment(shell);
-				dialog.create();
-				dialog.open();
-			}
-		});
+//		Button importButton = new Button(parent, SWT.PUSH);
+//		importButton.setText("Import assignment");
+//		importButton.addSelectionListener(new SelectionAdapter() {
+//			public void widgetSelected(SelectionEvent e) {
+//				Shell shell = new Shell();
+//				ImportAssignment dialog = new ImportAssignment(shell);
+//				dialog.create();
+//				dialog.open();
+//			}
+//		});
 		
 	}
 

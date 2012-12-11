@@ -16,8 +16,9 @@ public class Step {
 	
 	// TYPE 
 	public enum ExerciseType {
-		HTML, CODE, SELFTEST, UNKNOWN
+		HTML, CODE, SELFTEST, URL, UNKNOWN
 	}
+	// if you add to this, there are several boolean methods you might need to tweak below
 
 	// this gets called from the xml parser stuff in Assignment.java
 	public static ExerciseType parseExerciseType (String type) {
@@ -30,6 +31,8 @@ public class Step {
 			return ExerciseType.HTML;
 		} else if (type.equalsIgnoreCase("selftest")) {
 			return ExerciseType.SELFTEST;
+		} else if (type.equalsIgnoreCase("url")) {
+			return ExerciseType.URL;
 		} else {
 			return ExerciseType.UNKNOWN;
 		}
@@ -44,6 +47,9 @@ public class Step {
 	public boolean isSELFTEST() {
 		return type.equals(ExerciseType.SELFTEST);
 	}
+	public boolean isURL() {
+		return type.equals(ExerciseType.URL);
+	}
 	public boolean isUNKNOWN() {
 		return type.equals(ExerciseType.UNKNOWN);
 	}
@@ -53,9 +59,15 @@ public class Step {
 	}
 
 	public boolean openWithBrowser() {
-		return (isHTML() || isSELFTEST());
+		return (isHTML() || isSELFTEST() || isURL());
 	}
 
+	// to check if the path specified in <source> is local to project 
+	// -- because then it has to be prepended, etc.  URL is the only absolute
+	// right now.
+	public boolean sourceIsProjectLocal() {
+		return (isHTML() || isSELFTEST() || isCODE() || isUNKNOWN());
+	}
 	
 	// INTRO
 	String intro;
@@ -72,19 +84,14 @@ public class Step {
 
 
 	// SOURCE (FILENAME)
-	String fullSourcePath;
-	String withinProjectSourcePath;
+	String source;
 
 	public boolean hasSource() {
-		return ((fullSourcePath != null) && !(fullSourcePath.equalsIgnoreCase("")));
+		return ((source != null) && !(source.equalsIgnoreCase("")));
 	}
 	
-	public String getFullSourcePath() {
-		return fullSourcePath;
-	}
-
-	public String getWithinProjectSourcePath() {
-		return withinProjectSourcePath;
+	public String getSource() {
+		return source;
 	}
 
 	
@@ -136,10 +143,15 @@ public class Step {
 		return launchButtonName;
 	}
 	
-	
+	// PROJECT NAME
+	String projectName;
+	public String getProjectName() {
+		return projectName;
+	}
 	
 	// we assume all strings have been trimmed already.
 	public Step(
+			String projectName,
 			String name, 
 			String source, 
 			ExerciseType type,
@@ -148,9 +160,9 @@ public class Step {
 			String launchConfig,
 			String launchButtonName
 			) {
+		this.projectName = projectName;
 		this.name = name;
-		this.fullSourcePath = source;
-		this.withinProjectSourcePath = source;
+		this.source = source;
 		this.type = type;
 		this.intro = intro;
 		this.testclass = testclass;
@@ -158,15 +170,7 @@ public class Step {
 		this.launchButtonName = launchButtonName;
 	}
 
-	public void prependProjectName(String projectname) {
-		if (hasSource()) {
-			fullSourcePath = projectname + fullSourcePath;
-		}
-		if (hasTests()) {
-			// gotta fix up the launch configuration path
-			launchConfig = projectname + launchConfig;
-		}
-	}
+
 
 
 
