@@ -8,6 +8,10 @@ import java.util.Vector;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.debug.core.DebugPlugin;
+import org.eclipse.debug.core.ILaunchConfiguration;
+import org.eclipse.debug.core.ILaunchManager;
+import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
@@ -39,9 +43,10 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	Assignment segment;
 
-	Label currentStep;
-	Button next, back;
-	Label intro;
+//   NATE removed this ugly thing	
+//	Label currentStep;
+//	Button next, back;
+//	Label intro;
 	StyledText junit;
 
 	Group group;
@@ -55,6 +60,8 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		group = new Group(parent, style);
 		this.segment = seg;
 
+		/*	Nate removed this ugly thing at top...
+		 * 	
 		Group buttons = new Group(group, SWT.SHADOW_NONE);
 
 		back = new Button(buttons, SWT.ARROW | SWT.LEFT);
@@ -72,6 +79,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		Label introduction = new Label(group, SWT.WRAP);
 		intro = introduction;
 		introduction.setLayoutData(new RowData(150, 100));
+		*/
 
 		for (Step e : seg.getExercises()) {
 			GridData g = new GridData();
@@ -82,7 +90,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			layout.marginHeight = 1;
 			stepline.setLayout(layout);
 
-			g.widthHint = 15;
+			g.widthHint = 18;
 			Label sel = new Label(stepline, SWT.WRAP);
 			sel.setImage(selection);
 			sel.setVisible(false);
@@ -101,14 +109,14 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			g.widthHint = 100;
 			if (e.isCODE()) {
 				reset = new Button(stepline, 0);
-				reset.setText("Reset Exercise");
+				reset.setText("Reset");
 				reset.addSelectionListener(this);
 				reset.setLayoutData(g);
 			}
 			g.widthHint = 75;
-			if (e.hasTestClass()) {
+			if (e.hasTests()) {
 				test = new Button(stepline, 0);
-				test.setText("Run Tests");
+				test.setText(e.getLaunchButtonName());
 				test.addSelectionListener(this);
 				test.setLayoutData(g);
 			}
@@ -124,7 +132,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 					reset, get);
 			steps.add(widge);
 		}
-		intro.moveBelow(null);
+		//intro.moveBelow(null);
 		group.setLayout(setupLayout());
 	}
 
@@ -140,10 +148,10 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 	private void openStep(Step step) {
-		String filename = step.getFilename();
-		String localFilename = step.getRawFileName();
+		String filename = step.getFullSourcePath();
 		Path path = new Path(filename);
-
+		
+		String localFilename = step.getWithinProjectSourcePath();
 
 			//http://www.eclipse.org/forums/index.php/t/350942/
 			if (step.openWithJavaEditor()) {
@@ -179,7 +187,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	public void widgetSelected(SelectionEvent e) {
 		Object s = e.getSource();
 
-		if (s == back) {
+/*		if (s == back) {
 			if (onStep == 0) {
 				gotoStep(null);
 			} else {
@@ -189,13 +197,15 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			if (onStep <= steps.size()) {
 				gotoStep(steps.get(onStep + 1));
 			}
-		} else {
+		} else {*/
 			if (s instanceof Button) {
 				Button b = (Button) s;
 				StepWidgets w = StepWidgets.widgetFromTest(b, steps);
+				// if you click the button, you go to that step now.
+				gotoStep(w);
 				if (w != null) {
-					NavigatorActivator.getDefault().invokeTest(
-							w.exercise.getTestClass());
+					launch(w.exercise.getLaunchConfig());
+					//NavigatorActivator.getDefault().invokeTest(w.exercise.getTestClass());
 				} else {
 					w = StepWidgets.widgetFromReset(b, steps);
 					if (w != null) {
@@ -203,7 +213,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 					}
 				}
 			}
-		}
+		//}
 	}
 
 	@Override
@@ -243,15 +253,15 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 	private void resetIntro() {
-		currentStep.setText("Introduction");
-		intro.setText(segment.getIntro());
+		//currentStep.setText("Introduction");
+		//intro.setText(segment.getIntro());
 		hideSelections();
 	}
 
 	private void setToStep(StepWidgets widget) {
 		GridData d = new GridData(0, 0, true, false, 4, 1);
 		d.exclude = false;
-		currentStep.setText(widget.title.getText());
+		//currentStep.setText(widget.title.getText());
 		// intro.setText(widget.exercise.getIntro());
 		hideSelections();
 		hideInfo();
@@ -269,7 +279,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			s.info.setVisible(true);
 			s.info.setLayoutData(d);
 		}
-		intro.setLayoutData(new RowData(150, 0));
+		//intro.setLayoutData(new RowData(150, 0));
 		group.layout();
 	}
 
@@ -279,15 +289,19 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		}
 	}
 
-	// put this back if you want to use launch configurations again...
-	// private void launch(String launcherName) {
-	// Path path = new Path(launcherName);
-	// IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-	//
-	// ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
-	// ILaunchConfiguration config = manager.getLaunchConfiguration(file);
-	// DebugUITools.launch(config, ILaunchManager.RUN_MODE);
-	// }
+
+	private void launch(String launcherName) {
+		Path path = new Path(launcherName);
+		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+		String mode;
+		mode = ILaunchManager.RUN_MODE;
+		//mode = ILaunchManager.DEBUG_MODE;
+
+		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
+		ILaunchConfiguration config = manager.getLaunchConfiguration(file);
+		// 
+		DebugUITools.launch(config, mode);
+	}
 
 	private void gotoStep(StepWidgets widget) {
 		if (widget == null) {
@@ -297,17 +311,17 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			NavigatorActivator.getDefault().stepChanged(widget.getExercise());
 		}
 
-		if (onStep > -1) {
-			back.setEnabled(true);
-		} else {
-			back.setEnabled(false);
-		}
-
-		if (onStep + 1 < steps.size()) {
-			next.setEnabled(true);
-		} else {
-			next.setEnabled(false);
-		}
+//		if (onStep > -1) {
+//			back.setEnabled(true);
+//		} else {
+//			back.setEnabled(false);
+//		}
+//
+//		if (onStep + 1 < steps.size()) {
+//			next.setEnabled(true);
+//		} else {
+//			next.setEnabled(false);
+//		}
 		if (widget == null) { // go back to the introduction
 			resetIntro();
 		} else { // open up a step

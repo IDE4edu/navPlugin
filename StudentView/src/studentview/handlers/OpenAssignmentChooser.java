@@ -3,6 +3,7 @@ package studentview.handlers;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.commands.IHandler;
+import org.eclipse.core.commands.IHandler2;
 import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
@@ -12,11 +13,11 @@ import studentview.model.Assignment;
 import studentview.views.AssignmentChooser;
 import studentview.views.UCWISENav;
 
-public class OpenStudentViewHandler implements IHandler {
+public class OpenAssignmentChooser implements IHandler2 {
 
 	@Override
 	public void addHandlerListener(IHandlerListener handlerListener) {
-		// TODO Auto-generated method stub
+		// nope.
 
 	}
 
@@ -37,25 +38,33 @@ public class OpenStudentViewHandler implements IHandler {
 			IWorkbenchPage page = window.getActivePage();
 			if (page == null)
 				return null;
-			// Open and activate the Favorites view
+			UCWISENav navview;
+			// Open and activate the Navigator view
 			try {
-				page.showView(UCWISENav.ID);
+				navview = (UCWISENav) page.showView(UCWISENav.ID);
+				navview.chooseAssignment();
 			} catch (PartInitException e) {
-				//FavoritesLog.logError("Failed to open the Favorites view", e);
+				System.err.println("Couldn't open the navigator view, bummer.");;
 			}
+			
 			return null;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
+		// when would we never not be enabled, hey?
+		return true;
+	}
+	
+	@Override
+	public void setEnabled(Object evaluationContext) {
+		// ignore this -- always enabled, hey
 	}
 
 	@Override
 	public boolean isHandled() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
@@ -63,5 +72,6 @@ public class OpenStudentViewHandler implements IHandler {
 		// TODO Auto-generated method stub
 
 	}
+
 
 }

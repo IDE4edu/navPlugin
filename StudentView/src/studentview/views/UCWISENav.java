@@ -144,6 +144,7 @@ public class UCWISENav extends ViewPart{
 			isaHolder.layout();
 			title.setText(seg.getName());
 			isaHolder.redraw();
+			//this.getSite();
 		}
 	}
 
@@ -151,7 +152,7 @@ public class UCWISENav extends ViewPart{
 		RowLayout layout = new RowLayout();
 		layout.wrap = true;
 		layout.pack = true;
-		layout.fill = true;		
+		layout.fill = false;		
 		layout.justify = false;;
 		layout.type = SWT.VERTICAL;
 		layout.spacing = 10;		

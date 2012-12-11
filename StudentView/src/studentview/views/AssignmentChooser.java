@@ -11,6 +11,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.swt.SWT;
 
@@ -52,6 +53,9 @@ public class AssignmentChooser extends TitleAreaDialog {
 			System.err.println("Core Exception!!!");
 			e1.printStackTrace();
 		}
+		// sort assignments wrt sortOrder
+		Collections.sort(assignments);
+		int x;
 	}
 
 	@Override
