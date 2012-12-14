@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StackLayout;
 import org.eclipse.swt.events.SelectionEvent;
@@ -25,6 +26,7 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.part.ViewPart;
+import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 
 import studentview.NavigatorActivator;
@@ -88,22 +90,24 @@ public class UCWISENav extends ViewPart{
 
 	public void createPartControl(Composite rootparent) {
 
-		String selectionImage = "";
+//		String selectionImage = "";
 
-		try {
-			String filename = "icons/selection.gif";
-			Bundle bun = Platform.getBundle("StudentView");
-			IPath ip = new Path(filename);		
-			URL url = FileLocator.find(bun, ip, null);
-			URL res = FileLocator.resolve(url);
-			selectionImage = res.getPath();
-		} catch (IOException e) {
-			System.err.println("Could not find image file.");
-			e.printStackTrace();
-		}
+//		try {
+//			String filename = "icons/selection.gif";
+//			Bundle bun = Platform.getBundle("StudentView");
+//			IPath ip = new Path(filename);		
+//			URL url = FileLocator.find(bun, ip, null);
+//			URL res = FileLocator.resolve(url);
+//			selectionImage = res.getPath();
+//		} catch (IOException e) {
+//			System.err.println("Could not find image file.");
+//			e.printStackTrace();
+//		}
 
+		AbstractUIPlugin plugin = NavigatorActivator.getDefault();
+		ImageRegistry imageRegistry = plugin.getImageRegistry();
+		selection = imageRegistry.get(NavigatorActivator.SELECTION_IMAGE_ID); 
 		
-		Image select = new Image(rootparent.getDisplay(), selectionImage);
 
 		rootparent.setLayout(setupLayout());
 		rootparent.setLayoutData(rowdata);
@@ -119,7 +123,6 @@ public class UCWISENav extends ViewPart{
 		stackLayout = new StackLayout();
 		isaHolder.setLayout(stackLayout);
 		isaHolder.setLayoutData(new RowData());
-		selection = select;
 		
 		getAssignment.addSelectionListener(new SelectionListener() {
 
