@@ -1,9 +1,15 @@
-package studentview.views;
+package navigatorView.views;
 
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Vector;
+
+
+import navigatorView.NavigatorActivator;
+import navigatorView.model.Assignment;
+import navigatorView.model.Step;
+import navigatorView.model.Step.ExerciseType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -34,10 +40,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.ide.IDE;
 
-import studentview.NavigatorActivator;
-import studentview.model.Assignment;
-import studentview.model.Step;
-import studentview.model.Step.ExerciseType;
 
 public class SequenceWidget implements SelectionListener, MouseListener {
 

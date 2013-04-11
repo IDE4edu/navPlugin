@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: StudentView
-Bundle-SymbolicName: StudentView; singleton:=true
+Bundle-SymbolicName: edu.berkeley.eduride.navigatorview;singleton:=true
 Bundle-Version: 0.1.5
-Bundle-Activator: studentview.NavigatorActivator
+Bundle-Activator: navigatorView.NavigatorActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.7.0",
@@ -12,9 +12,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.debug.ui;bundle-version="3.7.0",
  org.eclipse.jdt.junit.runtime;bundle-version="3.4.300",
  org.eclipse.jdt.junit.core;bundle-version="3.7.0",
- org.eclipse.jdt.junit;bundle-version="3.7.0"
+ org.eclipse.jdt.junit;bundle-version="3.7.0",
+ EduRideBasePlugin;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Export-Package: studentview,
- studentview.controller,
- studentview.model
+Export-Package: navigatorView,
+ navigatorView.controller,
+ navigatorView.model

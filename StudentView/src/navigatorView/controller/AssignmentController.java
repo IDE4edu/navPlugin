@@ -1,4 +1,4 @@
-package studentview.controller;
+package navigatorView.controller;
 
 public class AssignmentController {
 	

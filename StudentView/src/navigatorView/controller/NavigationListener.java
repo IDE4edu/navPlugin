@@ -1,6 +1,6 @@
-package studentview.controller;
+package navigatorView.controller;
 
-import studentview.model.Step;
+import navigatorView.model.Step;
 
 public interface NavigationListener {
 

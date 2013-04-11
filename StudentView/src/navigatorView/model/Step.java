@@ -1,4 +1,4 @@
-package studentview.model;
+package navigatorView.model;
 
 import javax.security.auth.callback.LanguageCallback;
 

@@ -17,7 +17,7 @@
             name="EduRide Navigator"
             icon="icons/car-red.gif"
             category="edurideViewCategory"
-            class="studentview.views.UCWISENav"
+            class="navigatorView.views.UCWISENav"
             id="studentview.views.SampleView">
       </view>
    </extension>
@@ -56,7 +56,7 @@
       </category>
       <command
             categoryId="StudentView.commands.category1"
-            defaultHandler="studentview.handlers.OpenAssignmentChooser"
+            defaultHandler="navigatorView.handlers.OpenAssignmentChooser"
             description="Open the EduRide navigator and choose an assignment"
             id="StudentView.commands.openAssignmentChooser"
             name="Choose EduRide assignment">

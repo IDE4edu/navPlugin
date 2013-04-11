@@ -1,8 +1,14 @@
-package studentview;
+package navigatorView;
 
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
 import java.util.ArrayList;
+
+import navigatorView.controller.NavigationListener;
+import navigatorView.model.Step;
+import navigatorView.views.UCWISENav;
+
+import edu.berkeley.eduride.base_plugin.*;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -19,9 +25,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
 
-import studentview.controller.NavigationListener;
-import studentview.model.Step;
-import studentview.views.UCWISENav;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -29,7 +32,7 @@ import studentview.views.UCWISENav;
 public class NavigatorActivator extends AbstractUIPlugin {
 
 	// The plug-in ID
-	public static final String PLUGIN_ID = "StudentView"; //$NON-NLS-1$
+	public static final String PLUGIN_ID = "edu.berkeley.eduride.navigatorview"; //$NON-NLS-1$
 
 	// The shared instance
 	private static NavigatorActivator plugin;
@@ -119,6 +122,12 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		return browser;
 	}
 
+	
+	
+	public String getEduRideUser() {
+		return EduRideBase.whoami();
+	}
+	
 	// ///////////////////
 
 	// EduRideJunitView
@@ -151,7 +160,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	public Step getStepForTestClass(Class<?> testclass) {
 		UCWISENav v = (UCWISENav) PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage()
-				.findView("studentview.views.SampleView");
+				.findView("navigatorView.views.SampleView");
 
 		return null;
 	}

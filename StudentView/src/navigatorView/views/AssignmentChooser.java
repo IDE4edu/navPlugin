@@ -2,7 +2,9 @@
  * html-IDE.openeditor
  */
 
-package studentview.views;
+package navigatorView.views;
+
+import navigatorView.model.Assignment;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -24,7 +26,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import studentview.model.Assignment;
 
 public class AssignmentChooser extends TitleAreaDialog {
 

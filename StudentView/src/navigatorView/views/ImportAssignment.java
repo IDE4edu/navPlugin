@@ -1,4 +1,4 @@
-package studentview.views;
+package navigatorView.views;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.swt.SWT;

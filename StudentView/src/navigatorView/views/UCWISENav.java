@@ -1,9 +1,15 @@
-package studentview.views;
+package navigatorView.views;
 
 import java.io.IOException;
 
 import java.net.URL;
 import java.util.Vector;
+
+
+import navigatorView.NavigatorActivator;
+import navigatorView.controller.AssignmentController;
+import navigatorView.model.Assignment;
+
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -29,9 +35,6 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 
-import studentview.NavigatorActivator;
-import studentview.model.Assignment;
-import studentview.controller.AssignmentController;
 
 /**
  * This sample class demonstrates how to plug-in a new
@@ -56,7 +59,7 @@ public class UCWISENav extends ViewPart{
 	/**
 	 * The ID of the view as specified by the extension.
 	 */
-	public static final String ID = "studentview.views.SampleView";
+	public static final String ID = "navigatorView.views.SampleView";
 
 
 	Label title;

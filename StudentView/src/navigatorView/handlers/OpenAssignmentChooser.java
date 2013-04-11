@@ -1,4 +1,8 @@
-package studentview.handlers;
+package navigatorView.handlers;
+
+import navigatorView.model.Assignment;
+import navigatorView.views.AssignmentChooser;
+import navigatorView.views.UCWISENav;
 
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -8,10 +12,7 @@ import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.*;
-import studentview.model.Assignment;
 
-import studentview.views.AssignmentChooser;
-import studentview.views.UCWISENav;
 
 public class OpenAssignmentChooser implements IHandler2 {
 

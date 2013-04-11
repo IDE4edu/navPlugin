@@ -1,4 +1,4 @@
-package studentview.model;
+package navigatorView.model;
 
 import java.io.File;
 import java.net.URI;
@@ -7,6 +7,8 @@ import java.util.Vector;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import navigatorView.model.Step.ExerciseType;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.swt.widgets.Group;
@@ -14,7 +16,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import studentview.model.Step.ExerciseType;
 
 public class Assignment implements Comparable<Assignment> {
 

@@ -1,14 +1,15 @@
-package studentview.views;
+package navigatorView.views;
 
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
 import java.util.Vector;
 
+import navigatorView.model.Step;
+
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 
-import studentview.model.Step;
 
 public class StepWidget {
 	Label info;
