@@ -17,8 +17,8 @@
             name="EduRide Navigator"
             icon="icons/car-red.gif"
             category="edurideViewCategory"
-            class="navigatorView.views.UCWISENav"
-            id="studentview.views.SampleView">
+            class="navigatorView.views.NavigatorView"
+            id="edu.berkeley.eduride.navigatorview">
       </view>
    </extension>
    <extension
@@ -27,9 +27,9 @@
             targetID="org.eclipse.jdt.ui.JavaPerspective">
          <view
                ratio="0.5"
-               relative="org.eclipse.ui.views.ProblemView"
-               relationship="right"
-               id="studentview.views.SampleView">
+               relative="org.eclipse.jdt.ui.PackageExplorer"
+               relationship="left"
+               id="edu.berkeley.eduride.navigatorview">
          </view>
       </perspectiveExtension>
    </extension>
@@ -50,16 +50,16 @@
    <extension
          point="org.eclipse.ui.commands">
       <category
-            description="Commands Related to StudentView"
-            id="StudentView.commands.category1"
-            name="StudentView">
+            description="EduRide Navigator View Commands"
+            id="edu.berkeley.eduride.navigatorview"
+            name="NavigatorView">
       </category>
       <command
-            categoryId="StudentView.commands.category1"
-            defaultHandler="navigatorView.handlers.OpenAssignmentChooser"
-            description="Open the EduRide navigator and choose an assignment"
-            id="StudentView.commands.openAssignmentChooser"
-            name="Choose EduRide assignment">
+            categoryId="edu.berkeley.eduride.navigatorview"
+            defaultHandler="navigatorView.handlers.ShowNavigatorView"
+            description="Show the EduRide Navigator"
+            id="edu.berkeley.eduride.navigatorview.commands.showNavigatorView"
+            name="Open EduRide Navigator">
       </command>
    </extension>
    <extension
@@ -67,11 +67,11 @@
       <menuContribution
             locationURI="toolbar:org.eclipse.ui.main.toolbar?after=additions">
          <toolbar
-               id="StudentView.toolbars.main">
+               id="edu.berkeley.eduride.toolbars.main">
             <command
-                  commandId="StudentView.commands.openAssignmentChooser"
+                  commandId="edu.berkeley.eduride.navigatorview.commands.showNavigatorView"
                   icon="icons/car-red.gif"
-                  id="StudentView.command.openAssignment"
+                  id="edu.berkeley.eduride.navigator.command.showNavigatorView"
                   label="Choose an EduRide assignment"
                   style="push"
                   tooltip="Open the EduRide navigator view and choose an assignment">

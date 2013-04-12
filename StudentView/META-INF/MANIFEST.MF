@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: StudentView
+Bundle-Name: Eduride Navigator View
 Bundle-SymbolicName: edu.berkeley.eduride.navigatorview;singleton:=true
 Bundle-Version: 0.1.5
 Bundle-Activator: navigatorView.NavigatorActivator

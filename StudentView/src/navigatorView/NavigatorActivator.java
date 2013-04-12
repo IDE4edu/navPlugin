@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import navigatorView.controller.NavigationListener;
 import navigatorView.model.Step;
-import navigatorView.views.UCWISENav;
+import navigatorView.views.NavigatorView;
 
 import edu.berkeley.eduride.base_plugin.*;
 
@@ -157,10 +157,12 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		}
 	}
 
+	
+	// ? what is this used for?
 	public Step getStepForTestClass(Class<?> testclass) {
-		UCWISENav v = (UCWISENav) PlatformUI.getWorkbench()
+		NavigatorView v = (NavigatorView) PlatformUI.getWorkbench()
 				.getActiveWorkbenchWindow().getActivePage()
-				.findView("navigatorView.views.SampleView");
+				.findView(NavigatorView.ID);
 
 		return null;
 	}
