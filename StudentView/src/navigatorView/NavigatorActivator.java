@@ -13,6 +13,7 @@ import edu.berkeley.eduride.base_plugin.*;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.IViewPart;
@@ -132,6 +133,23 @@ public class NavigatorActivator extends AbstractUIPlugin {
 
 	// EduRideJunitView
 
+	
+	
+	// methods to figure out what the last launch launchconfig was
+	
+	private static ILaunchConfiguration currentLaunchConfig = null;
+	public static void setCurrentLaunchConfig(ILaunchConfiguration config) {
+		currentLaunchConfig = config;
+	}
+	
+	public static ILaunchConfiguration getLastLaunchConfiguration() {
+		return currentLaunchConfig;
+		
+	}
+	
+	
+	///  step changed listeners
+	
 	ArrayList<NavigationListener> listeners = new ArrayList<NavigationListener>();
 
 	public boolean registerListener(NavigationListener l) {
@@ -150,6 +168,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		}
 	}
 
+	
 	// called when the junit test should be run
 	public void invokeTest(Class<?> testclass) {
 		for (NavigationListener l : listeners) {
@@ -166,5 +185,8 @@ public class NavigatorActivator extends AbstractUIPlugin {
 
 		return null;
 	}
+	
+	
+	
 
 }
