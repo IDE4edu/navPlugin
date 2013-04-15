@@ -142,9 +142,9 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		currentLaunchConfig = config;
 	}
 	
+	
 	public static ILaunchConfiguration getLastLaunchConfiguration() {
 		return currentLaunchConfig;
-		
 	}
 	
 	
