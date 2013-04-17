@@ -125,8 +125,16 @@ public class NavigatorActivator extends AbstractUIPlugin {
 
 	
 	
-	public String getEduRideUser() {
-		return EduRideBase.whoami();
+	
+	
+	// returns "Welcome <user>", etc
+	public String getWelcomeMessage() {
+		String username = EduRideBase.getUsernameMaybeLogin();
+		if (username == null) {
+			return "(not authenticated)";
+		} else {
+			return "Welcome " + username;
+		}
 	}
 	
 	// ///////////////////

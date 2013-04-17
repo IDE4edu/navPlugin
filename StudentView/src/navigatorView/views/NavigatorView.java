@@ -46,7 +46,7 @@ public class NavigatorView extends ViewPart{
 	 */
 	public static final String ID = "edu.berkeley.eduride.navigatorview";
 
-
+	// title of the view
 	Label title;
 	Vector<SequenceWidget> isagroups = new Vector<SequenceWidget>();
 
@@ -100,10 +100,11 @@ public class NavigatorView extends ViewPart{
 		rootparent.setLayout(setupLayout());
 		rootparent.setLayoutData(rowdata);
 
+		
 		title = new Label(rootparent, SWT.WRAP);
-		title.setText("Assignments");
+		title.setText("Eduride Assignment");
 
-		Button getAssignment = new Button(rootparent, SWT.PUSH);
+		Button getAssignment = new Button(rootparent, SWT.PUSH | SWT.CENTER);
 		getAssignment.setEnabled(true);
 		getAssignment.setText("Get Assignment");
 
