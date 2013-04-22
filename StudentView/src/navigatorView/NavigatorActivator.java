@@ -129,7 +129,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	
 	// returns "Welcome <user>", etc
 	public String getWelcomeMessage() {
-		String username = EduRideBase.getUsernameMaybeLogin();
+		String username = EduRideBase.getDisplayNameMaybeLogin();
 		if (username == null) {
 			return "(not authenticated)";
 		} else {
