@@ -5,6 +5,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Vector;
 
+import javax.security.auth.callback.LanguageCallback;
+
 
 import navigatorView.NavigatorActivator;
 import navigatorView.model.Assignment;
@@ -214,9 +216,9 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 				// if you click the button, you go to that step now.
 				gotoStep(w);
 				if (w != null) {
-					String launchConfig = w.exercise.getProjectName() + w.exercise.getLaunchConfig();
-					launch(launchConfig);
-					//NavigatorActivator.getDefault().invokeTest(w.exercise.getTestClass());
+					NavigatorActivator.getDefault().invokeTest(w.getExercise(), w.exercise.getLaunchConfig());
+					String launchConfigName = w.exercise.getProjectName() + w.exercise.getLaunchConfig();
+					launch(launchConfigName);
 				} else {
 					w = StepWidget.widgetFromReset(b, steps);
 					if (w != null) {
@@ -301,8 +303,8 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 
-	private void launch(String launcherName) {
-		Path path = new Path(launcherName);
+	private void launch(String launchConfigName) {
+		Path path = new Path(launchConfigName);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		String mode;
 		mode = ILaunchManager.RUN_MODE;
@@ -321,8 +323,9 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		if (widget == null) {
 			onStep = -1;
 		} else {
+			Step currentStep = steps.get(onStep).getExercise();
+			NavigatorActivator.getDefault().stepChanged(currentStep, widget.getExercise());
 			onStep = steps.indexOf(widget);
-			NavigatorActivator.getDefault().stepChanged(widget.getExercise());
 		}
 
 //		if (onStep > -1) {

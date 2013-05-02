@@ -68,6 +68,10 @@ public class Assignment implements Comparable<Assignment> {
 		}
 	}
 
+	public String getProjectName() {
+		return projectName;
+	}
+	
 	public String getName() {
 		return name;
 	}

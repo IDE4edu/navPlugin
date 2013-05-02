@@ -2,9 +2,11 @@ package navigatorView;
 
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
+import java.io.File;
 import java.util.ArrayList;
 
 import navigatorView.controller.NavigationListener;
+import navigatorView.model.Assignment;
 import navigatorView.model.Step;
 import navigatorView.views.NavigatorView;
 
@@ -156,6 +158,9 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	}
 	
 	
+	
+	/////////////////////////////////////////
+	
 	///  step changed listeners
 	
 	ArrayList<NavigationListener> listeners = new ArrayList<NavigationListener>();
@@ -170,30 +175,28 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	}
 
 	// called when the step is changed in the view
-	public void stepChanged(Step newstep) {
+	public void stepChanged(Step oldstep, Step newstep) {
 		for (NavigationListener l : listeners) {
-			l.stepChanged(newstep);
+			l.stepChanged(oldstep, newstep);
 		}
 	}
 
 	
-	// called when the junit test should be run
-	public void invokeTest(Class<?> testclass) {
+	// called when the 'test' button clicked on a step
+	public void invokeTest(Step step, String launchConfig) {
 		for (NavigationListener l : listeners) {
-			l.invokeTest(testclass);
+			l.invokeTest(step, launchConfig);
 		}
 	}
 
 	
-	// ? what is this used for?
-	public Step getStepForTestClass(Class<?> testclass) {
-		NavigatorView v = (NavigatorView) PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow().getActivePage()
-				.findView(NavigatorView.ID);
-
-		return null;
+	public void openISA(Assignment ass) {
+		for (NavigationListener l : listeners) {
+			l.openISA(ass);
+		}
 	}
 	
+
 	
 	
 

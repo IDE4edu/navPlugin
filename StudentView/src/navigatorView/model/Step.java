@@ -96,7 +96,7 @@ public class Step {
 
 	
 	// TESTCLASS
-	// THIS STUFF DOESN'T WORK YET -- BACK TO LAUNCHERS
+	// this is never used....
 	String testclass;
 	public String getTestClassString() {
 		return testclass;
@@ -107,24 +107,6 @@ public class Step {
 		return ((testclass != null) && !("".equalsIgnoreCase(testclass.trim())));
 	}
 
-	public Class<?> getTestClass() {
-		if ((testclass != null) && (testclass != "")) {
-			try {
-				// nope...  need classloaders, yo.
-				Class<?> c = Class.forName(testclass);
-				return c;
-			} catch (ClassNotFoundException e) {
-				// TODO instructors should know about this, becase their test
-				// class
-				// isn't getting resolved for some reason
-				System.err.println("Unable to determine test class \""
-						+ testclass + "\" for step titled: " + name);
-				return null;
-			}
-		} else {
-			return null;
-		}
-	}
 
 	
 	// LAUNCH CONFIG
@@ -136,6 +118,7 @@ public class Step {
 	public boolean hasTests() {
 		return ((launchConfig != null) && (!(launchConfig.equals(""))));
 	}
+	
 
 	// LAUNCH NAME
 	String launchButtonName;
@@ -194,5 +177,11 @@ public class Step {
 		this.result = result;
 	}
 
+	
+	@Override
+	public String toString() {
+		return getName() + " (" + type + ":" + getProjectName() + ")"; 
+	}
+	
 
 }

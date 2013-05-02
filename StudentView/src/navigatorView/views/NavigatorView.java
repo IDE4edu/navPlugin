@@ -137,6 +137,7 @@ public class NavigatorView extends ViewPart{
 			stackLayout.topControl = parent.group;
 			isaHolder.layout();
 			title.setText(seg.getName());
+			NavigatorActivator.getDefault().openISA(seg);
 			
 			// select first step
 			StepWidget first = parent.steps.firstElement();
