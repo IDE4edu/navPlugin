@@ -19,9 +19,11 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
+import org.eclipse.ui.browser.IWorkbenchBrowserSupport;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -40,7 +42,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	// The shared instance
 	private static NavigatorActivator plugin;
 
-	private IWebBrowser browser;
+	private IWebBrowser browser = null;
 
 	/**
 	 * The constructor
@@ -60,16 +62,30 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		// context.
 		plugin = this;
 
-		try {
-			browser = PlatformUI.getWorkbench().getBrowserSupport()
-					.createBrowser(PLUGIN_ID);
-		} catch (PartInitException e) {
-			// TODO uh oh
-			e.printStackTrace();
-		}
-
+		initBrowser();   // try, anyway.
 	}
 
+	
+	private void initBrowser() {
+		try {
+			IWorkbench wb = PlatformUI.getWorkbench();
+			if (wb != null) {
+				IWorkbenchBrowserSupport wbbs = wb.getBrowserSupport();
+				if (wbbs != null) {
+
+					browser = wbbs.createBrowser(PLUGIN_ID);
+				}
+			}
+		} catch (PartInitException e) {
+			// e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// e.printStackTrace();
+		}
+	}
+
+
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -122,6 +138,9 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	// //////////////////////
 
 	public IWebBrowser getBrowser() {
+		if (browser == null) {
+			initBrowser();
+		}
 		return browser;
 	}
 

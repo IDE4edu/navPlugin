@@ -7,7 +7,6 @@ import java.util.Vector;
 
 import javax.security.auth.callback.LanguageCallback;
 
-
 import navigatorView.NavigatorActivator;
 import navigatorView.model.Assignment;
 import navigatorView.model.Step;
@@ -42,19 +41,18 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.ide.IDE;
 
-
 public class SequenceWidget implements SelectionListener, MouseListener {
 
 	Assignment segment;
 
-//   NATE removed this ugly thing	
-//	Label currentStep;
-//	Button next, back;
-//	Label intro;
+	// NATE removed this ugly thing
+	// Label currentStep;
+	// Button next, back;
+	// Label intro;
 	StyledText junit;
 
 	Group group;
-	
+
 	Vector<StepWidget> steps = new Vector<StepWidget>();
 
 	int onStep = -1;
@@ -64,26 +62,24 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		group = new Group(parent, style);
 		this.segment = seg;
 
-		/*	Nate removed this ugly thing at top...
-		 * 	
-		Group buttons = new Group(group, SWT.SHADOW_NONE);
-
-		back = new Button(buttons, SWT.ARROW | SWT.LEFT);
-		currentStep = new Label(buttons, SWT.WRAP);
-		next = new Button(buttons, SWT.ARROW | SWT.RIGHT);
-
-		RowLayout buttonsLO = new RowLayout();
-		buttonsLO.justify = true;
-		buttons.setLayout(buttonsLO);
-		back.addSelectionListener(this);
-		next.addSelectionListener(this);
-
-		back.setEnabled(false);
-
-		Label introduction = new Label(group, SWT.WRAP);
-		intro = introduction;
-		introduction.setLayoutData(new RowData(150, 100));
-		*/
+		/*
+		 * Nate removed this ugly thing at top...
+		 * 
+		 * Group buttons = new Group(group, SWT.SHADOW_NONE);
+		 * 
+		 * back = new Button(buttons, SWT.ARROW | SWT.LEFT); currentStep = new
+		 * Label(buttons, SWT.WRAP); next = new Button(buttons, SWT.ARROW |
+		 * SWT.RIGHT);
+		 * 
+		 * RowLayout buttonsLO = new RowLayout(); buttonsLO.justify = true;
+		 * buttons.setLayout(buttonsLO); back.addSelectionListener(this);
+		 * next.addSelectionListener(this);
+		 * 
+		 * back.setEnabled(false);
+		 * 
+		 * Label introduction = new Label(group, SWT.WRAP); intro =
+		 * introduction; introduction.setLayoutData(new RowData(150, 100));
+		 */
 
 		for (Step e : seg.getExercises()) {
 			GridData g = new GridData();
@@ -136,7 +132,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 					reset, get);
 			steps.add(widge);
 		}
-		//intro.moveBelow(null);
+		// intro.moveBelow(null);
 		group.setLayout(setupLayout());
 	}
 
@@ -153,45 +149,43 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	private void openStep(Step step) {
 
-
-		
-
-
-			//http://www.eclipse.org/forums/index.php/t/350942/
-			if (step.openWithJavaEditor()) {
-				Path path = new Path(step.getProjectName() + step.getSource());
-				IFile file = ResourcesPlugin.getWorkspace().getRoot()
-						.getFile(path);
-				IWorkbenchPage page = PlatformUI.getWorkbench()
-						.getActiveWorkbenchWindow().getActivePage();
-				try {
-					IDE.openEditor(page, file);
-				} catch (PartInitException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
-			} else if (step.openWithBrowser()){
-				try {
-					URL url;
-					if (step.sourceIsProjectLocal()) {
-						// gotta find the location on disk
-						URI base = segment.getIsaFile().getProject().getLocationURI();
-						url = new URL(base.toString() + step.getSource());
-					} else {
-						// source is absolute -- already a url probably
-						url = new URL(step.getSource());
-					}
-					NavigatorActivator.getDefault().getBrowser().openURL(url);
-					
-				} catch (MalformedURLException e) {
-					System.err.println("Whoops, bad url.  Couldn't make it from " + step.getSource());
-					e.printStackTrace();
-				} catch (PartInitException e) {
-					System.err.println("Couldn't open the URL from <source>" + step.getSource());
-					e.printStackTrace();
-				}
+		// http://www.eclipse.org/forums/index.php/t/350942/
+		if (step.openWithJavaEditor()) {
+			Path path = new Path(step.getProjectName() + step.getSource());
+			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			IWorkbenchPage page = PlatformUI.getWorkbench()
+					.getActiveWorkbenchWindow().getActivePage();
+			try {
+				IDE.openEditor(page, file);
+			} catch (PartInitException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+
+		} else if (step.openWithBrowser()) {
+			try {
+				URL url;
+				if (step.sourceIsProjectLocal()) {
+					// gotta find the location on disk
+					URI base = segment.getIsaFile().getProject()
+							.getLocationURI();
+					url = new URL(base.toString() + step.getSource());
+				} else {
+					// source is absolute -- already a url probably
+					url = new URL(step.getSource());
+				}
+				NavigatorActivator.getDefault().getBrowser().openURL(url);
+
+			} catch (MalformedURLException e) {
+				System.err.println("Whoops, bad url.  Couldn't make it from "
+						+ step.getSource());
+				e.printStackTrace();
+			} catch (PartInitException e) {
+				System.err.println("Couldn't open the URL from <source>"
+						+ step.getSource());
+				e.printStackTrace();
+			}
+		}
 
 	}
 
@@ -199,34 +193,30 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	public void widgetSelected(SelectionEvent e) {
 		Object s = e.getSource();
 
-/*		if (s == back) {
-			if (onStep == 0) {
-				gotoStep(null);
+		/*
+		 * if (s == back) { if (onStep == 0) { gotoStep(null); } else {
+		 * gotoStep(steps.get(onStep - 1)); } } else if (s == next) { if (onStep
+		 * <= steps.size()) { gotoStep(steps.get(onStep + 1)); } } else {
+		 */
+		if (s instanceof Button) {
+			Button b = (Button) s;
+			StepWidget w = StepWidget.widgetFromTest(b, steps);
+			// if you click the button, you go to that step now.
+			gotoStep(w);
+			if (w != null) {
+				NavigatorActivator.getDefault().invokeTest(w.getExercise(),
+						w.exercise.getLaunchConfig());
+				String launchConfigName = w.exercise.getProjectName()
+						+ w.exercise.getLaunchConfig();
+				launch(launchConfigName);
 			} else {
-				gotoStep(steps.get(onStep - 1));
-			}
-		} else if (s == next) {
-			if (onStep <= steps.size()) {
-				gotoStep(steps.get(onStep + 1));
-			}
-		} else {*/
-			if (s instanceof Button) {
-				Button b = (Button) s;
-				StepWidget w = StepWidget.widgetFromTest(b, steps);
-				// if you click the button, you go to that step now.
-				gotoStep(w);
+				w = StepWidget.widgetFromReset(b, steps);
 				if (w != null) {
-					NavigatorActivator.getDefault().invokeTest(w.getExercise(), w.exercise.getLaunchConfig());
-					String launchConfigName = w.exercise.getProjectName() + w.exercise.getLaunchConfig();
-					launch(launchConfigName);
-				} else {
-					w = StepWidget.widgetFromReset(b, steps);
-					if (w != null) {
-						// do reset
-					}
+					// do reset
 				}
 			}
-		//}
+		}
+		// }
 	}
 
 	@Override
@@ -266,15 +256,15 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	}
 
 	private void resetIntro() {
-		//currentStep.setText("Introduction");
-		//intro.setText(segment.getIntro());
+		// currentStep.setText("Introduction");
+		// intro.setText(segment.getIntro());
 		hideSelections();
 	}
 
 	private void setToStep(StepWidget widget) {
 		GridData d = new GridData(0, 0, false, false, 4, 1);
 		d.exclude = false;
-		//currentStep.setText(widget.title.getText());
+		// currentStep.setText(widget.title.getText());
 		// intro.setText(widget.exercise.getIntro());
 		hideSelections();
 		hideInfo();
@@ -292,7 +282,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			s.info.setVisible(true);
 			s.info.setLayoutData(d);
 		}
-		//intro.setLayoutData(new RowData(150, 0));
+		// intro.setLayoutData(new RowData(150, 0));
 		group.layout();
 	}
 
@@ -302,43 +292,47 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		}
 	}
 
-
 	private void launch(String launchConfigName) {
 		Path path = new Path(launchConfigName);
 		IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
 		String mode;
 		mode = ILaunchManager.RUN_MODE;
-		//mode = ILaunchManager.DEBUG_MODE;
+		// mode = ILaunchManager.DEBUG_MODE;
 
 		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfiguration config = manager.getLaunchConfiguration(file);
-		
+
 		NavigatorActivator.setCurrentLaunchConfig(config);
-		
-		// 
+
+		//
 		DebugUITools.launch(config, mode);
 	}
 
 	public void gotoStep(StepWidget widget) {
 		if (widget == null) {
 			onStep = -1;
+			NavigatorActivator.getDefault().stepChanged(null, null);
 		} else {
-			Step currentStep = steps.get(onStep).getExercise();
-			NavigatorActivator.getDefault().stepChanged(currentStep, widget.getExercise());
+			Step currentStep = null;
+			if (onStep != -1) {
+				currentStep = steps.get(onStep).getExercise();
+			}
+			NavigatorActivator.getDefault().stepChanged(currentStep,
+					widget.getExercise());
 			onStep = steps.indexOf(widget);
 		}
 
-//		if (onStep > -1) {
-//			back.setEnabled(true);
-//		} else {
-//			back.setEnabled(false);
-//		}
-//
-//		if (onStep + 1 < steps.size()) {
-//			next.setEnabled(true);
-//		} else {
-//			next.setEnabled(false);
-//		}
+		// if (onStep > -1) {
+		// back.setEnabled(true);
+		// } else {
+		// back.setEnabled(false);
+		// }
+		//
+		// if (onStep + 1 < steps.size()) {
+		// next.setEnabled(true);
+		// } else {
+		// next.setEnabled(false);
+		// }
 		if (widget == null) { // go back to the introduction
 			resetIntro();
 		} else { // open up a step
