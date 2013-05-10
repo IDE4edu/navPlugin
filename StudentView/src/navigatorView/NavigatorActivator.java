@@ -72,14 +72,13 @@ public class NavigatorActivator extends AbstractUIPlugin {
 			if (wb != null) {
 				IWorkbenchBrowserSupport wbbs = wb.getBrowserSupport();
 				if (wbbs != null) {
-
 					browser = wbbs.createBrowser(PLUGIN_ID);
 				}
 			}
 		} catch (PartInitException e) {
-			// e.printStackTrace();
+			log("install", "Failed to initialize browser -- partInitException");
 		} catch (IllegalStateException e) {
-			// e.printStackTrace();
+			log("install", "Failed to initialize browser -- IllegalStateException");
 		}
 	}
 
@@ -193,6 +192,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 		return (listeners.remove(l));
 	}
 
+	
 	// called when the step is changed in the view
 	public void stepChanged(Step oldstep, Step newstep) {
 		for (NavigationListener l : listeners) {
@@ -216,6 +216,11 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	}
 	
 
+	public void log(String action, String message) {
+		for (NavigationListener l : listeners) {
+			l.log(action, message);
+		}
+	}
 	
 	
 

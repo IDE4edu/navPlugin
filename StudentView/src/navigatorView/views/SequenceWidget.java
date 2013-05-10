@@ -20,6 +20,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchManager;
 import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -163,8 +164,8 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			}
 
 		} else if (step.openWithBrowser()) {
+			URL url = null;
 			try {
-				URL url;
 				if (step.sourceIsProjectLocal()) {
 					// gotta find the location on disk
 					URI base = segment.getIsaFile().getProject()
@@ -174,13 +175,19 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 					// source is absolute -- already a url probably
 					url = new URL(step.getSource());
 				}
-				NavigatorActivator.getDefault().getBrowser().openURL(url);
+				IWebBrowser b = NavigatorActivator.getDefault().getBrowser();
+				if (b != null) {
+					
+					b.openURL(url);
+				}
 
 			} catch (MalformedURLException e) {
+				NavigatorActivator.getDefault().log("browserFail", "Malformed URL Exception, uh oh.  url: " + url + ", step name: " + step.getName());
 				System.err.println("Whoops, bad url.  Couldn't make it from "
 						+ step.getSource());
 				e.printStackTrace();
 			} catch (PartInitException e) {
+				NavigatorActivator.getDefault().log("browserFail", "PartInitException, uh oh.  url: " + url + ", step name: " + step.getName());
 				System.err.println("Couldn't open the URL from <source>"
 						+ step.getSource());
 				e.printStackTrace();

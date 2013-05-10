@@ -12,5 +12,7 @@ public interface NavigationListener {
 	public void invokeTest(Step step, String launchConfig);
 	
 	public void openISA(Assignment ass);
+	
+	public void log(String action, String message);
 
 }

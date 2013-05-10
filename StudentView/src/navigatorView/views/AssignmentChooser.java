@@ -18,6 +18,7 @@ import java.util.Collections;
 import org.eclipse.swt.SWT;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridLayout;
@@ -29,13 +30,18 @@ import org.eclipse.swt.widgets.Shell;
 
 public class AssignmentChooser extends TitleAreaDialog {
 
-	private ArrayList<Assignment> assignments;
+	private ArrayList<Assignment> assignments =  new ArrayList<Assignment>();
 	private Assignment showAssignment;
+	Composite assignmentArea;
 
 	public AssignmentChooser(Shell parentShell) {
 		super(parentShell);
-		assignments = new ArrayList<Assignment>();
 		// Get all the assignments currently loaded in student's Eclipse
+		findAssignmentsInWorkspace();
+	}
+
+	private void findAssignmentsInWorkspace() {
+		assignments.clear();
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {			
 				@Override
@@ -56,28 +62,42 @@ public class AssignmentChooser extends TitleAreaDialog {
 		}
 		// sort assignments wrt sortOrder
 		Collections.sort(assignments);
-		int x;
 	}
 
+	
+	
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Choose assignment to work on");
+		setTitle("Choose assignment (from your workspace):");
 	}
 
 	@Override
 	protected Control createDialogArea(Composite parent) {
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
+		layout.numColumns = 4;
 		layout.marginBottom = 20;
 		layout.marginRight = 20;
 		layout.marginTop = 20;
 		layout.marginLeft = 20;
 		parent.setLayout(layout);
+		
+		ScrolledComposite assignmentScrolledArea = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.BORDER_DASH );
+		assignmentArea = new Composite(assignmentScrolledArea, SWT.NONE);
+		assignmentScrolledArea.setContent(assignmentArea);
+		GridLayout assignmentLayout = new GridLayout();
+		layout.numColumns = 1;
+		assignmentArea.setLayout(assignmentLayout);
+		setAssignmentArea();
+		
+		return parent;
+	}
 
+	
+	private void setAssignmentArea() {
 		for (int i = 0; i < assignments.size(); i++) {
 
-			Button radio = new Button(parent, SWT.RADIO);
+			Button radio = new Button(assignmentArea, SWT.RADIO);
 			radio.setText(assignments.get(i).getName());
 			radio.setToolTipText(assignments.get(i).getIntro());
 			radio.setEnabled(true);
@@ -85,14 +105,25 @@ public class AssignmentChooser extends TitleAreaDialog {
 			final int z = i;
 			radio.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					//show the Assignment
+					// show the Assignment
 					showAssignment = assignments.get(z);
 				}
 			});
 		}
-		return parent;
+		assignmentArea.setSize(assignmentArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
-
+	
+	private void refreshAssignmentArea() {
+		// note, the arraylist<Assignment> doesn't get updated here
+		Control[] assControls = assignmentArea.getChildren();
+		for (Control assControl : assControls) {
+			assControl.dispose();
+		}
+		setAssignmentArea();
+		assignmentArea.layout();
+	}
+	
+	
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
 		
@@ -106,7 +137,7 @@ public class AssignmentChooser extends TitleAreaDialog {
 		});
 		
 		// Create Cancel button
-		Button cancelButton = createButton(parent, CANCEL, "Cancel", false);
+		Button cancelButton = createButton(parent, CANCEL, "Cancel", true);
 		cancelButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				setReturnCode(CANCEL);
@@ -114,17 +145,28 @@ public class AssignmentChooser extends TitleAreaDialog {
 			}
 		});
 		
-//		Button importButton = new Button(parent, SWT.PUSH);
-//		importButton.setText("Import assignment");
-//		importButton.addSelectionListener(new SelectionAdapter() {
-//			public void widgetSelected(SelectionEvent e) {
-//				Shell shell = new Shell();
-//				ImportAssignment dialog = new ImportAssignment(shell);
-//				dialog.create();
-//				dialog.open();
-//			}
-//		});
+		Button importButton = new Button(parent, SWT.PUSH);
+		importButton.setText("Import...");
+		importButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				Shell shell = new Shell();
+				ImportAssignment dialog = new ImportAssignment(shell);
+				dialog.create();
+				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
+					findAssignmentsInWorkspace();
+					refreshAssignmentArea();
+				}
+			}
+		});
 		
+		Button refreshButton = new Button(parent, SWT.PUSH);
+		refreshButton.setText("Refresh");
+		refreshButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				findAssignmentsInWorkspace();
+				refreshAssignmentArea();
+			}
+		});
 	}
 
 	@Override
