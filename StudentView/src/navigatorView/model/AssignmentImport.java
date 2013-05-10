@@ -18,7 +18,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import navigatorView.NavigatorActivator;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 
 public class AssignmentImport {
