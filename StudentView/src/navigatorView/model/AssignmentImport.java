@@ -73,20 +73,20 @@ public class AssignmentImport {
 	}
 
 	static public void emptyImportRoot() {
-		try {
-			if (root != null) {
-				cleanDirectory(root);
-			} else {
-				getImportRoot();
-				cleanDirectory(root);
-			}
-		} catch (IOException e) {
-			String msg = "Couldn't delete files in import directory -- permissions? : "
-					+ root.toString();
-			System.err.println(msg);
-			NavigatorActivator.getDefault().log("installFailure", msg);
-			e.printStackTrace();
-		}
+//		try {
+//			if (root != null) {
+//				cleanDirectory(root);
+//			} else {
+//				getImportRoot();
+//				cleanDirectory(root);
+//			}
+//		} catch (IOException e) {
+//			String msg = "Couldn't delete files in import directory -- permissions? : "
+//					+ root.toString();
+//			System.err.println(msg);
+//			NavigatorActivator.getDefault().log("installFailure", msg);
+//			e.printStackTrace();
+//		}
 	}
 	
 	public static boolean cleanDirectory(File path) throws FileNotFoundException {

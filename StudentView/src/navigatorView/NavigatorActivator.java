@@ -72,7 +72,8 @@ public class NavigatorActivator extends AbstractUIPlugin {
 			if (wb != null) {
 				IWorkbenchBrowserSupport wbbs = wb.getBrowserSupport();
 				if (wbbs != null) {
-					browser = wbbs.createBrowser(PLUGIN_ID);
+					int style = IWorkbenchBrowserSupport.AS_EDITOR;
+					browser = wbbs.createBrowser(style, PLUGIN_ID, "EduRide", "EduRide");
 				}
 			}
 		} catch (PartInitException e) {
