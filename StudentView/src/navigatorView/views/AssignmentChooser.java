@@ -83,6 +83,8 @@ public class AssignmentChooser extends TitleAreaDialog {
 		parent.setLayout(layout);
 		
 		ScrolledComposite assignmentScrolledArea = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.BORDER_DASH );
+		assignmentScrolledArea.setMinHeight(100);
+		assignmentScrolledArea.setMinWidth(300);
 		assignmentArea = new Composite(assignmentScrolledArea, SWT.NONE);
 		assignmentScrolledArea.setContent(assignmentArea);
 		GridLayout assignmentLayout = new GridLayout();
