@@ -275,14 +275,15 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		if (onStep != -1) {
 			oldWidget = stepWidgets.get(onStep);
 			oldStep = oldWidget.getExercise();
-			
-			oldWidget.deselect();
 		}
 		
 		if (newWidget == null) {
 			onStep = -1;
 			//NavigatorActivator.getDefault().stepChanged(null, null);
-		} else {
+		} else if (oldWidget != newWidget) {
+			if (oldWidget != null) {
+				oldWidget.deselect();
+			}
 			newWidget.select();
 			onStep = stepWidgets.indexOf(newWidget);
 			
