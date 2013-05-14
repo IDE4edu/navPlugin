@@ -22,10 +22,14 @@ import org.eclipse.debug.ui.DebugUITools;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.custom.StyledText;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -44,29 +48,39 @@ import org.eclipse.ui.ide.IDE;
 
 public class SequenceWidget implements SelectionListener, MouseListener {
 
-	Assignment segment;
-
+	Assignment assignment;
+	Font bold;
+	Font italic;
 	// NATE removed this ugly thing
 	// Label currentStep;
 	// Button next, back;
 	// Label intro;
-	StyledText junit;
+	StyledText junit;   //?
 
-	Group group;
-
-	Vector<StepWidget> steps = new Vector<StepWidget>();
-
+	Group mainGroup;
+	Vector<StepWidget> stepWidgets = new Vector<StepWidget>();
 	int onStep = -1;
 
-	public SequenceWidget(Composite parent, int style, Assignment seg,
-			Image selection) {
-		group = new Group(parent, style);
-		this.segment = seg;
+	public SequenceWidget(Composite parent, int style, Assignment assignment,
+			Image selectionIcon) {
+		mainGroup = new Group(parent, style);
+		this.assignment = assignment;
 
+		// swt fonts, smh
+		FontData existingFD = parent.getFont().getFontData()[0];
+		bold = new Font(parent.getDisplay(), new FontData(existingFD.getName(), existingFD.getHeight(), SWT.BOLD));
+		italic = new Font(parent.getDisplay(), new FontData(existingFD.getName(), existingFD.getHeight(), SWT.ITALIC));
+		parent.addDisposeListener(new DisposeListener() {
+		    public void widgetDisposed(DisposeEvent e) {
+		        bold.dispose();
+		        italic.dispose();
+		    }
+		});
+		
 		/*
 		 * Nate removed this ugly thing at top...
 		 * 
-		 * Group buttons = new Group(group, SWT.SHADOW_NONE);
+		 * Group buttons = new Group(mainGroup, SWT.SHADOW_NONE);
 		 * 
 		 * back = new Button(buttons, SWT.ARROW | SWT.LEFT); currentStep = new
 		 * Label(buttons, SWT.WRAP); next = new Button(buttons, SWT.ARROW |
@@ -78,63 +92,84 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		 * 
 		 * back.setEnabled(false);
 		 * 
-		 * Label introduction = new Label(group, SWT.WRAP); intro =
+		 * Label introduction = new Label(mainGroup, SWT.WRAP); intro =
 		 * introduction; introduction.setLayoutData(new RowData(150, 100));
 		 */
 
-		for (Step e : seg.getExercises()) {
-			GridData g = new GridData();
-			Group stepline = new Group(group, SWT.SHADOW_NONE);
+		for (Step exercise : assignment.getExercises()) {
 
-			GridLayout layout = new GridLayout();
-			layout.numColumns = 4;
-			layout.marginHeight = 1;
-			stepline.setLayout(layout);
+			Group stepGroup = new Group(mainGroup, SWT.SHADOW_NONE);
 
-			g.widthHint = 18;
-			Label sel = new Label(stepline, SWT.WRAP);
-			sel.setImage(selection);
-			sel.setVisible(false);
-			sel.setLayoutData(g);
-			g = new GridData();
-			g.widthHint = 150;
-			Label step = new Label(stepline, SWT.WRAP);
-			step.setText(e.getName());
-			step.addMouseListener(this);
-			step.setLayoutData(g);
+			GridLayout assignmentLayout = new GridLayout();
+			assignmentLayout.numColumns = 4;
+			assignmentLayout.marginHeight = 1;
+			stepGroup.setLayout(assignmentLayout);
 
-			Button test = null;
+			GridData griddata;
+			
+			griddata = new GridData();
+			griddata.widthHint = 18;
+			Label selected = new Label(stepGroup, SWT.WRAP);
+			selected.setImage(selectionIcon);
+			selected.setVisible(false);
+			selected.setLayoutData(griddata);
+			
+			griddata = new GridData();
+			griddata.widthHint = 135;
+			
+			Label stepTitle = new Label(stepGroup, SWT.WRAP);
+			stepTitle.setFont(bold);
+			stepTitle.setText(exercise.getName());
+			stepTitle.addMouseListener(this);
+			stepTitle.setLayoutData(griddata);
+
 			Button reset = null;
-			g = new GridData();
-			g = new GridData();
-			g.widthHint = 100;
-			if (e.isCODE()) {
-				reset = new Button(stepline, 0);
+			griddata = new GridData();
+			griddata.widthHint = 60;
+			if (exercise.isCODE()) {
+				reset = new Button(stepGroup, 0);
 				reset.setText("Reset");
 				reset.addSelectionListener(this);
-				reset.setLayoutData(g);
+				reset.setLayoutData(griddata);
+				reset.setEnabled(false);
 			}
-			g.widthHint = 75;
-			if (e.hasTests()) {
-				test = new Button(stepline, 0);
-				test.setText(e.getLaunchButtonName());
+			
+			Button test = null;
+			griddata = new GridData();
+			griddata.widthHint = 70;
+			if (exercise.hasTests()) {
+				test = new Button(stepGroup, 0);
+				test.setText(exercise.getLaunchButtonName());
 				test.addSelectionListener(this);
-				test.setLayoutData(g);
+				test.setLayoutData(griddata);
+				test.setEnabled(false);
 			}
+			
+			GridData infoGD = new GridData(SWT.BEGINNING, SWT.TOP, false, false, 4, 1);
+			infoGD.exclude = true;
+			Label stepInfo = new Label(stepGroup, SWT.WRAP);
+			stepInfo.setFont(italic);
+			stepInfo.setText(exercise.getIntro());
+			//stepInfo.setVisible(false);
+			stepInfo.setLayoutData(infoGD);
 
-			GridData d = new GridData(0, 0, true, false, 4, 0);
-			d.exclude = true;
-			Label get = new Label(stepline, SWT.WRAP);
-			get.setText(e.getIntro());
-			get.setVisible(false);
-			get.setLayoutData(d);
-
-			StepWidget widge = new StepWidget(sel, step, e, stepline, test,
-					reset, get);
-			steps.add(widge);
+			StepWidget widge = new StepWidget(stepWidgets, selected, stepTitle, exercise, stepGroup, test,
+					reset, stepInfo);
+			widge.excludeGD = infoGD;
+			stepWidgets.add(widge);
 		}
+		
 		// intro.moveBelow(null);
-		group.setLayout(setupLayout());
+		mainGroup.setLayout(setupLayout());
+		//mainGroup.pack();
+//		for (StepWidget widge : stepWidgets) {
+//			widge.includeGD.widthHint = widge.info.getBounds().width;
+//		}
+//		mainGroup.pack();
+//		for (StepWidget widge : stepWidgets) {
+//			widge.deselect();
+//		}
+
 	}
 
 	private Layout setupLayout() {
@@ -144,22 +179,144 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		layout.fill = true;
 		layout.justify = false;
 		layout.type = SWT.VERTICAL;
-		layout.spacing = 3;
+		layout.spacing = 2;
 		return layout;
 	}
 
-	private void openStep(Step step) {
+	
 
+
+	
+	///////////////////
+	// Button events
+	// TODO move the selection listeners into the fricken step widgets, how about?
+	
+	@Override
+	public void widgetSelected(SelectionEvent e) {
+		Object s = e.getSource();
+
+		/*
+		 * if (s == back) { if (onStep == 0) { gotoStep(null); } else {
+		 * gotoStep(stepWidgets.get(onStep - 1)); } } else if (s == next) { if (onStep
+		 * <= stepWidgets.size()) { gotoStep(stepWidgets.get(onStep + 1)); } } else {
+		 */
+		
+		if (s instanceof Button) {
+			Button b = (Button) s;
+			StepWidget w = StepWidget.widgetFromTest(b, stepWidgets);
+			// if you click the button, you go to that step now.
+			// buttons in non-selected steps shouldn't be active not, so no
+			gotoStep(w);
+			if (w != null) {
+				NavigatorActivator.getDefault().invokeTest(w.getExercise(),
+						w.exercise.getLaunchConfig());
+				String launchConfigName = w.exercise.getProjectName()
+						+ w.exercise.getLaunchConfig();
+				launch(launchConfigName);
+			} else {
+				w = StepWidget.widgetFromReset(b, stepWidgets);
+				if (w != null) {
+					// TODO do reset
+				}
+			}
+		}
+		// }
+	}
+
+	
+	@Override
+	public void widgetDefaultSelected(SelectionEvent e) {
+
+	}
+
+	
+	//////////// 
+	//  Mouse events
+	
+	
+	@Override
+	public void mouseDoubleClick(MouseEvent e) {
+	}
+
+	private Object MD;
+
+	@Override
+	public void mouseDown(MouseEvent e) {
+		MD = e.getSource();
+	}
+
+	@Override
+	public void mouseUp(MouseEvent e) {
+		if (e.getSource() == MD)
+			mouseClick(e);
+	}
+
+	private void mouseClick(MouseEvent e) {
+		Object s = e.getSource();
+
+		if (s instanceof Label) {
+			StepWidget widge = StepWidget.widgetFromTitle((Label) s, stepWidgets);
+			if (widge != null) {
+				gotoStep(widge);
+			}
+		}
+	}
+
+	
+	//////////////////////////////////////
+	
+
+	
+	// main entrypoint for step changes
+	public void gotoStep(StepWidget newWidget) {
+		StepWidget oldWidget = null;
+		Step oldStep = null;
+		
+		if (onStep != -1) {
+			oldWidget = stepWidgets.get(onStep);
+			oldStep = oldWidget.getExercise();
+			
+			oldWidget.deselect();
+		}
+		
+		if (newWidget == null) {
+			onStep = -1;
+			//NavigatorActivator.getDefault().stepChanged(null, null);
+		} else {
+			newWidget.select();
+			onStep = stepWidgets.indexOf(newWidget);
+			
+			Step newStep = newWidget.getExercise();			
+			// log the change -- oldStep might be null
+			NavigatorActivator.getDefault().stepChanged(oldStep, newStep);
+			try {
+				openEditor(newStep);
+			} catch (Exception boo) {
+				NavigatorActivator.getDefault().log("openStepFail", newStep.getName() + ": " + boo.getMessage());
+				boo.printStackTrace(System.err);
+				return;
+			}
+
+			mainGroup.layout(true, true);
+		}
+
+	}
+	
+	
+
+	
+	
+	
+	private void openEditor(Step step) {
 		// http://www.eclipse.org/forums/index.php/t/350942/
 		if (step.openWithJavaEditor()) {
-			Path path = new Path(step.getProjectName() + step.getSource());
-			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+			IFile file = step.getSourceIFile();
 			IWorkbenchPage page = PlatformUI.getWorkbench()
 					.getActiveWorkbenchWindow().getActivePage();
 			try {
 				IDE.openEditor(page, file);
 			} catch (PartInitException e) {
-				// TODO Auto-generated catch block
+
 				e.printStackTrace();
 			}
 
@@ -168,7 +325,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			try {
 				if (step.sourceIsProjectLocal()) {
 					// gotta find the location on disk
-					URI base = segment.getIsaFile().getProject()
+					URI base = assignment.getIsaFile().getProject()
 							.getLocationURI();
 					url = new URL(base.toString() + step.getSource());
 				} else {
@@ -196,108 +353,9 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 
 	}
 
-	@Override
-	public void widgetSelected(SelectionEvent e) {
-		Object s = e.getSource();
+	
+	
 
-		/*
-		 * if (s == back) { if (onStep == 0) { gotoStep(null); } else {
-		 * gotoStep(steps.get(onStep - 1)); } } else if (s == next) { if (onStep
-		 * <= steps.size()) { gotoStep(steps.get(onStep + 1)); } } else {
-		 */
-		if (s instanceof Button) {
-			Button b = (Button) s;
-			StepWidget w = StepWidget.widgetFromTest(b, steps);
-			// if you click the button, you go to that step now.
-			gotoStep(w);
-			if (w != null) {
-				NavigatorActivator.getDefault().invokeTest(w.getExercise(),
-						w.exercise.getLaunchConfig());
-				String launchConfigName = w.exercise.getProjectName()
-						+ w.exercise.getLaunchConfig();
-				launch(launchConfigName);
-			} else {
-				w = StepWidget.widgetFromReset(b, steps);
-				if (w != null) {
-					// do reset
-				}
-			}
-		}
-		// }
-	}
-
-	@Override
-	public void widgetDefaultSelected(SelectionEvent e) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void mouseDoubleClick(MouseEvent e) {
-		// TODO Auto-generated method stub
-		// System.out.println("mousedoubleclick");
-	}
-
-	private Object MD;
-
-	@Override
-	public void mouseDown(MouseEvent e) {
-		MD = e.getSource();
-	}
-
-	@Override
-	public void mouseUp(MouseEvent e) {
-		if (e.getSource() == MD)
-			mouseClick(e);
-	}
-
-	private void mouseClick(MouseEvent e) {
-		Object s = e.getSource();
-
-		if (s instanceof Label) {
-			StepWidget widge = StepWidget.widgetFromTitle((Label) s, steps);
-			if (widge != null) {
-				gotoStep(widge);
-			}
-		}
-	}
-
-	private void resetIntro() {
-		// currentStep.setText("Introduction");
-		// intro.setText(segment.getIntro());
-		hideSelections();
-	}
-
-	private void setToStep(StepWidget widget) {
-		GridData d = new GridData(0, 0, false, false, 4, 1);
-		d.exclude = false;
-		// currentStep.setText(widget.title.getText());
-		// intro.setText(widget.exercise.getIntro());
-		hideSelections();
-		hideInfo();
-		widget.selection.setVisible(true);
-		widget.info.setVisible(true);
-		widget.info.setLayoutData(d);
-		group.layout(true, true);
-	}
-
-	private void hideSelections() {
-		for (StepWidget s : steps) {
-			s.selection.setVisible(false);
-			GridData d = new GridData(0, 0, false, false, 4, 1);
-			d.exclude = true;
-			s.info.setVisible(true);
-			s.info.setLayoutData(d);
-		}
-		// intro.setLayoutData(new RowData(150, 0));
-		group.layout();
-	}
-
-	private void hideInfo() {
-		for (StepWidget s : steps) {
-			s.info.setVisible(false);
-		}
-	}
 
 	private void launch(String launchConfigName) {
 		Path path = new Path(launchConfigName);
@@ -315,44 +373,5 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		DebugUITools.launch(config, mode);
 	}
 
-	public void gotoStep(StepWidget widget) {
-		if (widget == null) {
-			onStep = -1;
-			NavigatorActivator.getDefault().stepChanged(null, null);
-		} else {
-			Step currentStep = null;
-			if (onStep != -1) {
-				currentStep = steps.get(onStep).getExercise();
-			}
-			NavigatorActivator.getDefault().stepChanged(currentStep,
-					widget.getExercise());
-			onStep = steps.indexOf(widget);
-		}
-
-		// if (onStep > -1) {
-		// back.setEnabled(true);
-		// } else {
-		// back.setEnabled(false);
-		// }
-		//
-		// if (onStep + 1 < steps.size()) {
-		// next.setEnabled(true);
-		// } else {
-		// next.setEnabled(false);
-		// }
-		if (widget == null) { // go back to the introduction
-			resetIntro();
-		} else { // open up a step
-			Step ex = widget.exercise;
-			try {
-				openStep(ex);
-			} catch (Exception boo) {
-				boo.printStackTrace(System.err);
-				return;
-			}
-			setToStep(widget);
-		}
-
-	}
-
+	
 }

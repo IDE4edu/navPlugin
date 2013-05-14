@@ -1,6 +1,12 @@
 package navigatorView.model;
 
+import java.io.File;
+
 import javax.security.auth.callback.LanguageCallback;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.Path;
 
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
@@ -94,6 +100,26 @@ public class Step {
 		return source;
 	}
 
+	
+	private File srcFile = null;
+	private IFile srcIFile = null;
+
+	public IFile getSourceIFile() {
+		if (srcIFile == null) {
+			Path path = new Path(getProjectName() + getSource());
+			srcIFile = ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(path);
+		}
+		return srcIFile;
+	}
+	
+	public File getSourceFile() {
+		if (srcFile == null) {
+			IFile ifile = getSourceIFile();
+			srcFile = ifile.getRawLocation().makeAbsolute().toFile();
+		}
+		return srcFile;
+	}
 	
 	// TESTCLASS
 	// this is never used....

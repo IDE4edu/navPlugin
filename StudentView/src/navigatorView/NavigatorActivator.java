@@ -3,6 +3,7 @@ package navigatorView;
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import navigatorView.controller.NavigationListener;
@@ -220,6 +221,18 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	public void log(String action, String message) {
 		for (NavigationListener l : listeners) {
 			l.log(action, message);
+		}
+	}
+	
+	public void logFileContents(File txtfile) {
+		for (NavigationListener l : listeners) {
+			try {
+				String action = "File:" + txtfile.getName();
+				l.log(action, txtfile);
+			} catch (FileNotFoundException e) {
+				l.log("fileLogFail", "Whoops, tried to log entire file that didn't exist: " + txtfile.getPath());
+				e.printStackTrace();
+			}
 		}
 	}
 	

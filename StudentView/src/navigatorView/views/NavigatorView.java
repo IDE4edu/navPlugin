@@ -134,20 +134,20 @@ public class NavigatorView extends ViewPart{
 		if (dialog.open() == org.eclipse.jface.window.Window.OK) {
 			seg = dialog.getSegment();
 			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
-			stackLayout.topControl = parent.group;
+			stackLayout.topControl = parent.mainGroup;
 			isaHolder.layout();
 			title.setText(seg.getName());
 			NavigatorActivator.getDefault().openISA(seg);
 			
 			// select first step
-			StepWidget first = parent.steps.firstElement();
+			StepWidget first = parent.stepWidgets.firstElement();
 			parent.gotoStep(first);
 		}
 	}
 
 	private Layout setupLayout() {
 		RowLayout layout = new RowLayout();
-		layout.wrap = true;
+		layout.wrap = false;
 		layout.pack = true;
 		layout.fill = false;		
 		layout.justify = false;;
