@@ -168,11 +168,13 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	// methods to figure out what the last launch launchconfig was
 	
 	private static ILaunchConfiguration currentLaunchConfig = null;
+	// UNUSED
 	public static void setCurrentLaunchConfig(ILaunchConfiguration config) {
 		currentLaunchConfig = config;
 	}
 	
 	
+	// UNUSED RIGHT NOW. 
 	public static ILaunchConfiguration getLastLaunchConfiguration() {
 		return currentLaunchConfig;
 	}

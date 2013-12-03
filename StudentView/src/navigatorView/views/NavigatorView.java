@@ -54,7 +54,7 @@ public class NavigatorView extends ViewPart{
 	RowData rowdata = new RowData();
 	StackLayout stackLayout;
 	Group isaHolder;
-	Assignment seg;
+	Assignment assgn;
 	Image selection;
 	NavigatorActivator plugin;
 
@@ -68,7 +68,7 @@ public class NavigatorView extends ViewPart{
 	}
 
 	public Assignment getCurrentAssignment() {
-		return seg;
+		return assgn;
 	}
 	
 	/**
@@ -132,12 +132,12 @@ public class NavigatorView extends ViewPart{
 		AssignmentChooser dialog = new AssignmentChooser(shell);
 		dialog.create();
 		if (dialog.open() == org.eclipse.jface.window.Window.OK) {
-			seg = dialog.getSegment();
-			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, seg, selection);
+			assgn = dialog.getSegment();
+			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, assgn, selection);
 			stackLayout.topControl = parent.mainGroup;
 			isaHolder.layout();
-			title.setText(seg.getName());
-			NavigatorActivator.getDefault().openISA(seg);
+			title.setText(assgn.getName());
+			NavigatorActivator.getDefault().openISA(assgn);
 			
 			// select first step
 			StepWidget first = parent.stepWidgets.firstElement();

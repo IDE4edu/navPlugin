@@ -368,7 +368,8 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		ILaunchManager manager = DebugPlugin.getDefault().getLaunchManager();
 		ILaunchConfiguration config = manager.getLaunchConfiguration(file);
 
-		NavigatorActivator.setCurrentLaunchConfig(config);
+		
+		//NavigatorActivator.setCurrentLaunchConfig(config);
 
 		//
 		DebugUITools.launch(config, mode);
