@@ -1,23 +1,30 @@
 package navigatorView.model;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Vector;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import navigatorView.model.Step.ExerciseType;
+import navigatorView.model.Step.StepType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.swt.widgets.Group;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import edu.berkeley.eduride.base_plugin.util.ISAFormatException;
 
-public class Assignment implements Comparable<Assignment> {
+
+public class Activity implements Comparable<Activity> {
 
 	String projectName;
 	String name;
@@ -25,7 +32,7 @@ public class Assignment implements Comparable<Assignment> {
 	String category;
 	String subCategory;
 	int sortOrder;
-	Vector<Step> exercises;
+	ArrayList<Step> steps;
 	IFile isaFile;
 
 	public IFile getIsaFile() {
@@ -38,24 +45,24 @@ public class Assignment implements Comparable<Assignment> {
 
 	Group group;
 
-	public Assignment(String projectName, String intro, String name, Vector<Step> exercises,
+	public Activity(String projectName, String intro, String name, ArrayList<Step> steps,
 			String category, String subCategory, String sortOrder) {
 		this.projectName = projectName;
 		this.intro = intro;
-		this.exercises = exercises;
+		this.steps = steps;
 		this.name = name;
 		this.category = category;
 		this.subCategory = subCategory;
 		try {
 			this.sortOrder = Integer.parseInt(sortOrder);
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			System.err.println("hey, bad sort order " + sortOrder + " on assignment " + name + " -- couldn't convert it to int");
+			// TODO Throw exception up, please, for authors
+			System.err.println("hey, bad sort order " + sortOrder + " on activity " + name + " -- couldn't convert it to int");
 			this.sortOrder = 1;
 		}
 	}
 
-	public int compareTo(Assignment that) {
+	public int compareTo(Activity that) {
 	    final int BEFORE = -1;
 	    final int EQUAL = 0;
 	    final int AFTER = 1;
@@ -88,33 +95,74 @@ public class Assignment implements Comparable<Assignment> {
 		return this.group;
 	}
 
-	public static Assignment parseISA(IFile isa) {
-		// project is that which contains the isa file
-		String projectName = isa.getFullPath().segment(0);
-		URI uri = isa.getLocationURI();
-		File file = new File(uri);
+	public static Activity parseISA(IFile isa) {
 		Handler handler;
 		try {
+			// project is that which contains the isa file
+			String projectName = isa.getFullPath().segment(0);
+			URI uri = isa.getLocationURI();
+			File file = new File(uri);
+
 			SAXParserFactory factory = SAXParserFactory.newInstance();
 			SAXParser saxParser = factory.newSAXParser();
 			handler = new Handler();
 			handler.projectName = projectName;
 			saxParser.parse(file, handler);
-		} catch (Exception e) {
-			e.printStackTrace(System.err);
+
+			Activity activity = handler.getActivity();
+			activity.isaFile = isa;
+
+			// for Feedback view
+			ArrayList<Step> steps = activity.getSteps();
+			for (Step step : steps) {
+				if (step.isCODE() && step.hasTestClass()) {
+					setupFeedbackModel(step);
+				}
+			}
+			return handler.getActivity();
+
+			// THESE EXCEPTIONS NEED TO WARN USER (ISA AUTHOR) SOMEHOW
+		} catch (ISAFormatException e) {
+			// TODO: ISA file has bad content
+			e.printStackTrace();
+			return null; // ?
+		} catch (SAXParseException e) {
+			// problem in the XML somewhere
+			System.err.println("ISA File Problem: tag " + e.getPublicId()
+					+ ", line " + e.getLineNumber() + ", column "
+					+ e.getColumnNumber());
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
 			return null;
 		}
-		Assignment s = handler.getAssignment();
-		s.isaFile = isa;
-		return handler.getAssignment();
+
 	}
 
-	public Vector<Step> getExercises() {
-		return exercises;
+	
+	
+	private static void setupFeedbackModel(Step step) throws ISAFormatException {
+		edu.berkeley.eduride.feedbackview.FeedbackModelProvider.setup(
+				JavaCore.createCompilationUnitFrom(step.getSourceIFile()), 
+				null,
+				JavaCore.createCompilationUnitFrom(step.getTestClassIFile())
+				);
+	}
+	
+	
+	public ArrayList<Step> getSteps() {
+		return steps;
 	}
 
-	public Step getExercise(String name) {
-		for (Step e : exercises) {
+	public Step getStep(String name) {
+		for (Step e : steps) {
 			if (e.getName().equals(name))
 				return e;
 		}
@@ -123,7 +171,7 @@ public class Assignment implements Comparable<Assignment> {
 
 	private static class Handler extends DefaultHandler {
 		public static final String isaTag = "isa";
-		public static final String exerciseTag = "exercise";
+		public static final String stepTag = "exercise";
 		public static final String categoryTag = "category";
 		public static final String subcategoryTag = "subcategory";
 		public static final String sortorderTag = "sortorder";
@@ -142,14 +190,14 @@ public class Assignment implements Comparable<Assignment> {
 
 		@Override
 		public void endDocument() throws SAXException {
-			assign = new Assignment(projectName, isaIntro, isaName, exercises, isaCategory, isaSubCategory, isaSortOrder);
+			act = new Activity(projectName, isaIntro, isaName, steps, isaCategory, isaSubCategory, isaSortOrder);
 		}
 
-		private Assignment assign;
+		private Activity act;
 		public String projectName;
 
-		public Assignment getAssignment() {
-			return assign;
+		public Activity getActivity() {
+			return act;
 		}
 
 		String isaIntro = "";
@@ -158,10 +206,10 @@ public class Assignment implements Comparable<Assignment> {
 		String isaSubCategory = "";
 		String isaSortOrder = "1";
 
-		boolean inExercise = false;
+		boolean inStep = false;
 
 		String name;
-		ExerciseType type; // default comes from parseExerciseType()
+		StepType type; // default comes from parseStepType()
 		String intro;
 		String source;
 		String testclass;
@@ -171,7 +219,7 @@ public class Assignment implements Comparable<Assignment> {
 		// Defaults
 		private void resetDefaults() {
 			name = "";
-			ExerciseType type = Step.parseExerciseType(null);
+			StepType type = Step.parseStepType(null);
 			intro = "";
 			source = "";
 			testclass = null;
@@ -180,13 +228,13 @@ public class Assignment implements Comparable<Assignment> {
 		}
 
 		StringBuffer buffer = new StringBuffer();
-		Vector<Step> exercises = new Vector<Step>();
+		ArrayList<Step> steps = new ArrayList<Step>();
 
 		@Override
 		public void startElement(String namespaceURI, String localName,
 				String qName, Attributes atts) throws SAXException {
-			if (qName.equalsIgnoreCase(exerciseTag)) {
-				inExercise = true;
+			if (qName.equalsIgnoreCase(stepTag)) {
+				inStep = true;
 				resetDefaults();
 			}
 		}
@@ -195,11 +243,11 @@ public class Assignment implements Comparable<Assignment> {
 		public void endElement(String uri, String localName, String qName)
 				throws SAXException {
 			String s = buffer.toString().trim();
-			if (qName.equalsIgnoreCase(exerciseTag)) {
-				exercises.add(new Step(projectName, name, source, type, intro, testclass,
+			if (qName.equalsIgnoreCase(stepTag)) {
+				steps.add(new Step(projectName, name, source, type, intro, testclass,
 						launch, launchButtonName));
 				reset(false);
-			} else if (!inExercise) {
+			} else if (!inStep) {
 				if (qName.equalsIgnoreCase(introTag)) {
 					isaIntro = s;
 				} else if (qName.equalsIgnoreCase(nameTag)) {
@@ -213,13 +261,13 @@ public class Assignment implements Comparable<Assignment> {
 				}
 				reset(false);
 			} else {
-				// in the exercise tag
+				// in the step tag
 				if (qName.equalsIgnoreCase(introTag)) {
 					intro = s;
 				} else if (qName.equalsIgnoreCase(nameTag)) {
 					name = s;
 				} else if (qName.equalsIgnoreCase(typeTag)) {
-					type = Step.parseExerciseType(s); // code is in Step
+					type = Step.parseStepType(s); // code is in Step
 				} else if (qName.equalsIgnoreCase(sourceTag)) {
 					source = s;
 				} else if (qName.equalsIgnoreCase(testclassTag)) {
@@ -234,7 +282,7 @@ public class Assignment implements Comparable<Assignment> {
 					System.err.println("Bad tag in isa file: " + qName
 							+ " String is: " + s);
 				}
-				reset(inExercise);
+				reset(inStep);
 			}
 		}
 
@@ -245,7 +293,7 @@ public class Assignment implements Comparable<Assignment> {
 
 		private void reset(boolean inEx) {
 			buffer = new StringBuffer();
-			inExercise = inEx;
+			inStep = inEx;
 		}
 
 	}

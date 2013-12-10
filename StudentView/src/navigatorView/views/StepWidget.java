@@ -2,6 +2,7 @@ package navigatorView.views;
 
 //Andy Carle, Berkeley Institute of Design, UC Berkeley
 
+import java.util.ArrayList;
 import java.util.Vector;
 
 import navigatorView.model.Step;
@@ -14,25 +15,25 @@ import org.eclipse.swt.widgets.Label;
 
 
 public class StepWidget {
-	Vector<StepWidget> steps;
+	ArrayList<StepWidget> stepWidgets;
 	Label info;
 	GridData includeGD;
 	GridData excludeGD;
 	Label selection;
 	Label title;
-	Step exercise;
+	Step step;
 	Group group;
 	//Label completion;
 	Button test;
 	Button reset;
 
 
-	public StepWidget(Vector<StepWidget> steps, Label selection, Label title, Step exercise, Group group, Button test, Button reset, Label info){
-		this.steps = steps;
+	public StepWidget(ArrayList<StepWidget> stepWidgets, Label selection, Label title, Step step, Group group, Button test, Button reset, Label info){
+		this.stepWidgets = stepWidgets;
 		this.info = info;
 		this.selection = selection;
 		this.title = title;
-		this.exercise = exercise;
+		this.step = step;
 		this.group = group;
 		this.test = test;
 		this.reset = reset;
@@ -45,8 +46,8 @@ public class StepWidget {
 	}
 
 	
-	public Step getExercise() {
-		return exercise;
+	public Step getStep() {
+		return step;
 	}	
 	
 	
@@ -86,21 +87,21 @@ public class StepWidget {
 	////////////////////////
 	
 	
-	public static StepWidget widgetFromTitle(Label title, Vector<StepWidget> widgets){
+	public static StepWidget widgetFromTitle(Label title, ArrayList<StepWidget> widgets){
 		for (StepWidget w : widgets){
 			if (w.title == title) return w;
 		}
 		return null;
 	}
 
-	public static StepWidget widgetFromTest(Button test, Vector<StepWidget> widgets){
+	public static StepWidget widgetFromTest(Button test, ArrayList<StepWidget> widgets){
 		for (StepWidget w : widgets){
 			if (w.test == test) return w;
 		}
 		return null;
 	}
 
-	public static StepWidget widgetFromReset(Button reset, Vector<StepWidget> widgets){
+	public static StepWidget widgetFromReset(Button reset, ArrayList<StepWidget> widgets){
 		for (StepWidget w : widgets){
 			if (w.reset == reset) return w;
 		}

@@ -1,7 +1,7 @@
 package navigatorView.handlers;
 
-import navigatorView.model.Assignment;
-import navigatorView.views.AssignmentChooser;
+import navigatorView.model.Activity;
+import navigatorView.views.ActivityChooser;
 import navigatorView.views.NavigatorView;
 
 import org.eclipse.core.commands.ExecutionEvent;
@@ -42,7 +42,7 @@ public class ShowNavigatorView implements IHandler2 {
 			try {
 				NavigatorView navview = (NavigatorView) page.showView(NavigatorView.ID);
 				// do this conditionally, please
-				//navview.chooseAssignment();
+				//navview.chooseActivity();
 			} catch (PartInitException e) {
 				System.err.println("Couldn't open the navigator view, bummer.");;
 			}

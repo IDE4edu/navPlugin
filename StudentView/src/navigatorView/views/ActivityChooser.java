@@ -1,10 +1,10 @@
-/* test assignments
+/* test activities
  * html-IDE.openeditor
  */
 
 package navigatorView.views;
 
-import navigatorView.model.Assignment;
+import navigatorView.model.Activity;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -28,20 +28,20 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 
-public class AssignmentChooser extends TitleAreaDialog {
+public class ActivityChooser extends TitleAreaDialog {
 
-	private ArrayList<Assignment> assignments =  new ArrayList<Assignment>();
-	private Assignment showAssignment;
-	Composite assignmentArea;
+	private ArrayList<Activity> activities =  new ArrayList<Activity>();
+	private Activity showActivity;
+	Composite activityArea;
 
-	public AssignmentChooser(Shell parentShell) {
+	public ActivityChooser(Shell parentShell) {
 		super(parentShell);
-		// Get all the assignments currently loaded in student's Eclipse
-		findAssignmentsInWorkspace();
+		// Get all the activities currently loaded in student's Eclipse
+		findActivitiesInWorkspace();
 	}
 
-	private void findAssignmentsInWorkspace() {
-		assignments.clear();
+	private void findActivitiesInWorkspace() {
+		activities.clear();
 		try {
 			ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {			
 				@Override
@@ -60,8 +60,8 @@ public class AssignmentChooser extends TitleAreaDialog {
 			System.err.println("Core Exception!!!");
 			e1.printStackTrace();
 		}
-		// sort assignments wrt sortOrder
-		Collections.sort(assignments);
+		// sort activities wrt sortOrder
+		Collections.sort(activities);
 	}
 
 	
@@ -69,7 +69,7 @@ public class AssignmentChooser extends TitleAreaDialog {
 	@Override
 	public void create() {
 		super.create();
-		setTitle("Choose assignment (from your workspace):");
+		setTitle("Choose activity (from your workspace):");
 	}
 
 	@Override
@@ -82,47 +82,47 @@ public class AssignmentChooser extends TitleAreaDialog {
 		layout.marginLeft = 20;
 		parent.setLayout(layout);
 		
-		ScrolledComposite assignmentScrolledArea = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.BORDER_DASH );
-		assignmentScrolledArea.setMinHeight(100);
-		assignmentScrolledArea.setMinWidth(300);
-		assignmentArea = new Composite(assignmentScrolledArea, SWT.NONE);
-		assignmentScrolledArea.setContent(assignmentArea);
-		GridLayout assignmentLayout = new GridLayout();
+		ScrolledComposite activityScrolledArea = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.BORDER_DASH );
+		activityScrolledArea.setMinHeight(100);
+		activityScrolledArea.setMinWidth(300);
+		activityArea = new Composite(activityScrolledArea, SWT.NONE);
+		activityScrolledArea.setContent(activityArea);
+		GridLayout activityLayout = new GridLayout();
 		layout.numColumns = 1;
-		assignmentArea.setLayout(assignmentLayout);
-		setAssignmentArea();
+		activityArea.setLayout(activityLayout);
+		setActivityArea();
 		
 		return parent;
 	}
 
 	
-	private void setAssignmentArea() {
-		for (int i = 0; i < assignments.size(); i++) {
+	private void setActivityArea() {
+		for (int i = 0; i < activities.size(); i++) {
 
-			Button radio = new Button(assignmentArea, SWT.RADIO);
-			radio.setText(assignments.get(i).getName());
-			radio.setToolTipText(assignments.get(i).getIntro());
+			Button radio = new Button(activityArea, SWT.RADIO);
+			radio.setText(activities.get(i).getName());
+			radio.setToolTipText(activities.get(i).getIntro());
 			radio.setEnabled(true);
 
 			final int z = i;
 			radio.addSelectionListener(new SelectionAdapter() {
 				public void widgetSelected(SelectionEvent e) {
-					// show the Assignment
-					showAssignment = assignments.get(z);
+					// show the Activity
+					showActivity = activities.get(z);
 				}
 			});
 		}
-		assignmentArea.setSize(assignmentArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		activityArea.setSize(activityArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
 	
-	private void refreshAssignmentArea() {
-		// note, the arraylist<Assignment> doesn't get updated here
-		Control[] assControls = assignmentArea.getChildren();
+	private void refreshActivityArea() {
+		// note, the arraylist<Activity> doesn't get updated here
+		Control[] assControls = activityArea.getChildren();
 		for (Control assControl : assControls) {
 			assControl.dispose();
 		}
-		setAssignmentArea();
-		assignmentArea.layout();
+		setActivityArea();
+		activityArea.layout();
 	}
 	
 	
@@ -152,11 +152,11 @@ public class AssignmentChooser extends TitleAreaDialog {
 		importButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Shell shell = new Shell();
-				ImportAssignment dialog = new ImportAssignment(shell);
+				ImportActivity dialog = new ImportActivity(shell);
 				dialog.create();
 				if (dialog.open() == org.eclipse.jface.window.Window.OK) {
-					findAssignmentsInWorkspace();
-					refreshAssignmentArea();
+					findActivitiesInWorkspace();
+					refreshActivityArea();
 				}
 			}
 		});
@@ -165,8 +165,8 @@ public class AssignmentChooser extends TitleAreaDialog {
 		refreshButton.setText("Refresh");
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
-				findAssignmentsInWorkspace();
-				refreshAssignmentArea();
+				findActivitiesInWorkspace();
+				refreshActivityArea();
 			}
 		});
 	}
@@ -177,14 +177,14 @@ public class AssignmentChooser extends TitleAreaDialog {
 	}
 
 	public void parseISA(IFile file) {
-		Assignment s = Assignment.parseISA(file);
+		Activity s = Activity.parseISA(file);
 		if (s == null) System.err.println("Failed to parse file: " + file.getName());
 		s.getIntro();
-		assignments.add(s);
+		activities.add(s);
 	}
 
-	public Assignment getSegment() {
-		return showAssignment;
+	public Activity getActivity() {
+		return showActivity;
 	}
 } 
 

@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import navigatorView.controller.NavigationListener;
-import navigatorView.model.Assignment;
+import navigatorView.model.Activity;
 import navigatorView.model.Step;
 import navigatorView.views.NavigatorView;
 
@@ -213,7 +213,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 	}
 
 	
-	public void openISA(Assignment ass) {
+	public void openISA(Activity ass) {
 		for (NavigationListener l : listeners) {
 			l.openISA(ass);
 		}

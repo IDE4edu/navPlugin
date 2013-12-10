@@ -1,6 +1,6 @@
 package navigatorView.controller;
 
-public class AssignmentController {
+public class ActivityController {
 	
 
 }

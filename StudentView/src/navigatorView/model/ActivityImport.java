@@ -20,14 +20,14 @@ import navigatorView.NavigatorActivator;
 
 import org.eclipse.ui.dialogs.IOverwriteQuery;
 
-public class AssignmentImport {
+public class ActivityImport {
 
 	private String name;
 	private URL url;
 	private Date date;
 	
 	
-	public AssignmentImport(String name, URL url, Date date) {
+	public ActivityImport(String name, URL url, Date date) {
 		this.name = name;
 		this.url = url;
 		this.date = date;

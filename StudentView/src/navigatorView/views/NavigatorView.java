@@ -7,8 +7,8 @@ import java.util.Vector;
 
 
 import navigatorView.NavigatorActivator;
-import navigatorView.controller.AssignmentController;
-import navigatorView.model.Assignment;
+import navigatorView.controller.ActivityController;
+import navigatorView.model.Activity;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -48,13 +48,13 @@ public class NavigatorView extends ViewPart{
 
 	// title of the view
 	Label title;
-	Vector<SequenceWidget> isagroups = new Vector<SequenceWidget>();
+	Vector<ActivityWidget> isagroups = new Vector<ActivityWidget>();
 
 	Group hidden;
 	RowData rowdata = new RowData();
 	StackLayout stackLayout;
 	Group isaHolder;
-	Assignment assgn;
+	Activity act;
 	Image selection;
 	NavigatorActivator plugin;
 
@@ -67,8 +67,8 @@ public class NavigatorView extends ViewPart{
 		plugin = NavigatorActivator.getDefault();
 	}
 
-	public Assignment getCurrentAssignment() {
-		return assgn;
+	public Activity getCurrentActivity() {
+		return act;
 	}
 	
 	/**
@@ -102,21 +102,21 @@ public class NavigatorView extends ViewPart{
 
 		
 		title = new Label(rootparent, SWT.WRAP);
-		title.setText("Eduride Assignment");
+		title.setText("Eduride Activity");
 
-		Button getAssignment = new Button(rootparent, SWT.PUSH | SWT.CENTER);
-		getAssignment.setEnabled(true);
-		getAssignment.setText("Get Assignment");
+		Button getActivity = new Button(rootparent, SWT.PUSH | SWT.CENTER);
+		getActivity.setEnabled(true);
+		getActivity.setText("Get Activity");
 
 		isaHolder = new Group(rootparent, SWT.SHADOW_NONE);
 		stackLayout = new StackLayout();
 		isaHolder.setLayout(stackLayout);
 		isaHolder.setLayoutData(new RowData());
 		
-		getAssignment.addSelectionListener(new SelectionListener() {
+		getActivity.addSelectionListener(new SelectionListener() {
 
 			public void widgetSelected(SelectionEvent event) {
-				chooseAssignment();
+				chooseActivty();
 				// reset the layout for the new controls
 				PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell().layout(true, true);
 			}
@@ -127,20 +127,20 @@ public class NavigatorView extends ViewPart{
 		});
 	}
 	
-	public void chooseAssignment() {
+	public void chooseActivty() {
 		Shell shell = new Shell();
-		AssignmentChooser dialog = new AssignmentChooser(shell);
+		ActivityChooser dialog = new ActivityChooser(shell);
 		dialog.create();
 		if (dialog.open() == org.eclipse.jface.window.Window.OK) {
-			assgn = dialog.getSegment();
-			SequenceWidget parent = new SequenceWidget(isaHolder, SWT.SHADOW_NONE, assgn, selection);
+			act = dialog.getActivity();
+			ActivityWidget parent = new ActivityWidget(isaHolder, SWT.SHADOW_NONE, act, selection);
 			stackLayout.topControl = parent.mainGroup;
 			isaHolder.layout();
-			title.setText(assgn.getName());
-			NavigatorActivator.getDefault().openISA(assgn);
+			title.setText(act.getName());
+			NavigatorActivator.getDefault().openISA(act);
 			
 			// select first step
-			StepWidget first = parent.stepWidgets.firstElement();
+			StepWidget first = parent.stepWidgets.get(0);
 			parent.gotoStep(first);
 		}
 	}

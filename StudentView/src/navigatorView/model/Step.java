@@ -21,43 +21,43 @@ public class Step {
 	
 	
 	// TYPE 
-	public enum ExerciseType {
+	public enum StepType {
 		HTML, CODE, SELFTEST, URL, UNKNOWN
 	}
 	// if you add to this, there are several boolean methods you might need to tweak below
 
-	// this gets called from the xml parser stuff in Assignment.java
-	public static ExerciseType parseExerciseType (String type) {
+	// this gets called from the xml parser stuff in Activity.java
+	public static StepType parseStepType (String type) {
 		if (type == null) {
-			return ExerciseType.UNKNOWN;
+			return StepType.UNKNOWN;
 		}
 		if (type.equalsIgnoreCase("code")) {
-			return ExerciseType.CODE;
+			return StepType.CODE;
 		} else if (type.equalsIgnoreCase("html")) {
-			return ExerciseType.HTML;
+			return StepType.HTML;
 		} else if (type.equalsIgnoreCase("selftest")) {
-			return ExerciseType.SELFTEST;
+			return StepType.SELFTEST;
 		} else if (type.equalsIgnoreCase("url")) {
-			return ExerciseType.URL;
+			return StepType.URL;
 		} else {
-			return ExerciseType.UNKNOWN;
+			return StepType.UNKNOWN;
 		}
 	}
 	
 	public boolean isHTML() {
-		return type.equals(ExerciseType.HTML);
+		return type.equals(StepType.HTML);
 	}
 	public boolean isCODE() {
-		return type.equals(ExerciseType.CODE);
+		return type.equals(StepType.CODE);
 	}
 	public boolean isSELFTEST() {
-		return type.equals(ExerciseType.SELFTEST);
+		return type.equals(StepType.SELFTEST);
 	}
 	public boolean isURL() {
-		return type.equals(ExerciseType.URL);
+		return type.equals(StepType.URL);
 	}
 	public boolean isUNKNOWN() {
-		return type.equals(ExerciseType.UNKNOWN);
+		return type.equals(StepType.UNKNOWN);
 	}
 	
 	public boolean openWithJavaEditor() {
@@ -83,8 +83,8 @@ public class Step {
 	
 
 	// TYPE
-	ExerciseType type;
-	public ExerciseType getExerciseType() {
+	StepType type;
+	public StepType getStepType() {
 		return type;
 	}
 
@@ -122,17 +122,28 @@ public class Step {
 	}
 	
 	// TESTCLASS
-	// this is never used....
 	String testclass;
-	public String getTestClassString() {
+	//private File testclassFile = null;
+	private IFile testclassIFile = null;
+	
+	public String getTestClass() {
 		return testclass;
 	}
 
+	
 	public boolean hasTestClass() {
 		// it either doesn't exist or is just whitespace
 		return ((testclass != null) && !("".equalsIgnoreCase(testclass.trim())));
 	}
-
+	
+	public IFile getTestClassIFile() {
+		if (testclassIFile == null) {
+			Path path = new Path(getProjectName() + getTestClass());
+			testclassIFile = ResourcesPlugin.getWorkspace().getRoot()
+					.getFile(path);
+		}
+		return testclassIFile;
+	}
 
 	
 	// LAUNCH CONFIG
@@ -163,7 +174,7 @@ public class Step {
 			String projectName,
 			String name, 
 			String source, 
-			ExerciseType type,
+			StepType type,
 			String intro,
 			String testclass, 
 			String launchConfig,

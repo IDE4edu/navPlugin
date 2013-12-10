@@ -3,14 +3,15 @@ package navigatorView.views;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Vector;
 
 import javax.security.auth.callback.LanguageCallback;
 
 import navigatorView.NavigatorActivator;
-import navigatorView.model.Assignment;
+import navigatorView.model.Activity;
 import navigatorView.model.Step;
-import navigatorView.model.Step.ExerciseType;
+import navigatorView.model.Step.StepType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -46,9 +47,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.ide.IDE;
 
-public class SequenceWidget implements SelectionListener, MouseListener {
+public class ActivityWidget implements SelectionListener, MouseListener {
 
-	Assignment assignment;
+	Activity act;
 	Font bold;
 	Font italic;
 	// NATE removed this ugly thing
@@ -58,13 +59,13 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 	StyledText junit;   //?
 
 	Group mainGroup;
-	Vector<StepWidget> stepWidgets = new Vector<StepWidget>();
+	ArrayList<StepWidget> stepWidgets = new ArrayList<StepWidget>();
 	int onStep = -1;
 
-	public SequenceWidget(Composite parent, int style, Assignment assignment,
+	public ActivityWidget(Composite parent, int style, Activity act,
 			Image selectionIcon) {
 		mainGroup = new Group(parent, style);
-		this.assignment = assignment;
+		this.act = act;
 
 		// swt fonts, smh
 		FontData existingFD = parent.getFont().getFontData()[0];
@@ -96,14 +97,14 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		 * introduction; introduction.setLayoutData(new RowData(150, 100));
 		 */
 
-		for (Step exercise : assignment.getExercises()) {
+		for (Step step : act.getSteps()) {
 
 			Group stepGroup = new Group(mainGroup, SWT.SHADOW_NONE);
 
-			GridLayout assignmentLayout = new GridLayout();
-			assignmentLayout.numColumns = 4;
-			assignmentLayout.marginHeight = 1;
-			stepGroup.setLayout(assignmentLayout);
+			GridLayout actLayout = new GridLayout();
+			actLayout.numColumns = 4;
+			actLayout.marginHeight = 1;
+			stepGroup.setLayout(actLayout);
 
 			GridData griddata;
 			
@@ -119,14 +120,14 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			
 			Label stepTitle = new Label(stepGroup, SWT.WRAP);
 			stepTitle.setFont(bold);
-			stepTitle.setText(exercise.getName());
+			stepTitle.setText(step.getName());
 			stepTitle.addMouseListener(this);
 			stepTitle.setLayoutData(griddata);
 
 			Button reset = null;
 			griddata = new GridData();
 			griddata.widthHint = 60;
-			if (exercise.isCODE()) {
+			if (step.isCODE()) {
 				reset = new Button(stepGroup, 0);
 				reset.setText("Reset");
 				reset.addSelectionListener(this);
@@ -137,9 +138,9 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			Button test = null;
 			griddata = new GridData();
 			griddata.widthHint = 70;
-			if (exercise.hasTests()) {
+			if (step.hasTests()) {
 				test = new Button(stepGroup, 0);
-				test.setText(exercise.getLaunchButtonName());
+				test.setText(step.getLaunchButtonName());
 				test.addSelectionListener(this);
 				test.setLayoutData(griddata);
 				test.setEnabled(false);
@@ -149,11 +150,11 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			infoGD.exclude = true;
 			Label stepInfo = new Label(stepGroup, SWT.WRAP);
 			stepInfo.setFont(italic);
-			stepInfo.setText(exercise.getIntro());
+			stepInfo.setText(step.getIntro());
 			//stepInfo.setVisible(false);
 			stepInfo.setLayoutData(infoGD);
 
-			StepWidget widge = new StepWidget(stepWidgets, selected, stepTitle, exercise, stepGroup, test,
+			StepWidget widge = new StepWidget(stepWidgets, selected, stepTitle, step, stepGroup, test,
 					reset, stepInfo);
 			widge.excludeGD = infoGD;
 			stepWidgets.add(widge);
@@ -208,10 +209,10 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			// buttons in non-selected steps shouldn't be active not, so no
 			gotoStep(w);
 			if (w != null) {
-				NavigatorActivator.getDefault().invokeTest(w.getExercise(),
-						w.exercise.getLaunchConfig());
-				String launchConfigName = w.exercise.getProjectName()
-						+ w.exercise.getLaunchConfig();
+				NavigatorActivator.getDefault().invokeTest(w.getStep(),
+						w.step.getLaunchConfig());
+				String launchConfigName = w.step.getProjectName()
+						+ w.step.getLaunchConfig();
 				launch(launchConfigName);
 			} else {
 				w = StepWidget.widgetFromReset(b, stepWidgets);
@@ -274,7 +275,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 		
 		if (onStep != -1) {
 			oldWidget = stepWidgets.get(onStep);
-			oldStep = oldWidget.getExercise();
+			oldStep = oldWidget.getStep();
 		}
 		
 		if (newWidget == null) {
@@ -287,7 +288,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			newWidget.select();
 			onStep = stepWidgets.indexOf(newWidget);
 			
-			Step newStep = newWidget.getExercise();			
+			Step newStep = newWidget.getStep();			
 			// log the change -- oldStep might be null
 			NavigatorActivator.getDefault().stepChanged(oldStep, newStep);
 			try {
@@ -326,7 +327,7 @@ public class SequenceWidget implements SelectionListener, MouseListener {
 			try {
 				if (step.sourceIsProjectLocal()) {
 					// gotta find the location on disk
-					URI base = assignment.getIsaFile().getProject()
+					URI base = act.getIsaFile().getProject()
 							.getLocationURI();
 					url = new URL(base.toString() + step.getSource());
 				} else {

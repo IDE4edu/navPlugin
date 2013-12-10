@@ -3,7 +3,7 @@ package navigatorView.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import navigatorView.model.Assignment;
+import navigatorView.model.Activity;
 import navigatorView.model.Step;
 
 public interface NavigationListener {
@@ -12,7 +12,7 @@ public interface NavigationListener {
 	
 	public void invokeTest(Step step, String launchConfig);
 	
-	public void openISA(Assignment ass);
+	public void openISA(Activity ass);
 	
 	public void log(String action, String message);
 	

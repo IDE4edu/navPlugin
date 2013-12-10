@@ -72,9 +72,9 @@
                   commandId="edu.berkeley.eduride.navigatorview.commands.showNavigatorView"
                   icon="icons/car-red.gif"
                   id="edu.berkeley.eduride.navigator.command.showNavigatorView"
-                  label="Choose an EduRide assignment"
+                  label="Choose an EduRide activity"
                   style="push"
-                  tooltip="Open the EduRide navigator view and choose an assignment">
+                  tooltip="Open the EduRide navigator view and choose an activity">
             </command>
          </toolbar>
       </menuContribution>

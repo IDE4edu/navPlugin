@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import navigatorView.NavigatorActivator;
-import navigatorView.model.AssignmentImport;
+import navigatorView.model.ActivityImport;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -36,11 +36,11 @@ import org.json.JSONArray;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
 
-public class ImportAssignment extends TitleAreaDialog {
+public class ImportActivity extends TitleAreaDialog {
 
-	ArrayList<AssignmentImport> imports = new ArrayList<AssignmentImport>();
+	ArrayList<ActivityImport> imports = new ArrayList<ActivityImport>();
 	
-	public ImportAssignment(Shell parentShell) {
+	public ImportActivity(Shell parentShell) {
 		super(parentShell);
 		
 		String domain = EduRideBase.getDomain();
@@ -54,7 +54,7 @@ public class ImportAssignment extends TitleAreaDialog {
 	public void create() {
 		super.create();
 		// Set the title
-		setTitle("Choose Assignments to import");
+		setTitle("Choose Activities to import");
 	}
 
 	@Override
@@ -89,11 +89,11 @@ public class ImportAssignment extends TitleAreaDialog {
 
 				// Do import.
 				
-				for (AssignmentImport imp : imports) {
+				for (ActivityImport imp : imports) {
 					imp.importMe();
 				}
 				
-				File root = AssignmentImport.getImportRoot();
+				File root = ActivityImport.getImportRoot();
 				StructuredSelection currentSelection = new StructuredSelection();
 
 				IWorkbenchWizard wizard = new ExternalProjectImportWizard(root.getPath());
@@ -105,7 +105,7 @@ public class ImportAssignment extends TitleAreaDialog {
 				wd.open();
 				
 				// TODO delete files, etc.
-				AssignmentImport.emptyImportRoot();
+				ActivityImport.emptyImportRoot();
 				
 				setReturnCode(OK);
 				close();
@@ -183,13 +183,13 @@ public class ImportAssignment extends TitleAreaDialog {
 				String name = jsonAss.getString(0);
 				String urlstring = jsonAss.getString(1);
 				String datestring = jsonAss.getString(2);
-				AssignmentImport ass = null;
+				ActivityImport ass = null;
 				try {
-					ass = new AssignmentImport(name, new URL(urlstring), new Date());
+					ass = new ActivityImport(name, new URL(urlstring), new Date());
 				} catch (MalformedURLException e) {
-					NavigatorActivator.getDefault().log("importAssignmentFail", "bad url from server: " + urlstring);
+					NavigatorActivator.getDefault().log("importActivityFail", "bad url from server: " + urlstring);
 				}
-				NavigatorActivator.getDefault().log("importAssignment", "got assignment: " + name + ", from: " + urlstring);
+				NavigatorActivator.getDefault().log("importActivity", "got activity: " + name + ", from: " + urlstring);
 				imports.add(ass);
 			}
 		}
