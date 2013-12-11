@@ -54,6 +54,7 @@ public class ActivityWidget implements SelectionListener, MouseListener {
 	Font italic;
 	// NATE removed this ugly thing
 	// Label currentStep;
+	// TODO lets re-add fwd, back buttons, hey.
 	// Button next, back;
 	// Label intro;
 	StyledText junit;   //?

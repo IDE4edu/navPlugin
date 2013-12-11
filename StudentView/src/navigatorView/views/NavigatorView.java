@@ -92,11 +92,11 @@ public class NavigatorView extends ViewPart{
 //			e.printStackTrace();
 //		}
 
-		AbstractUIPlugin plugin = NavigatorActivator.getDefault();
-		ImageRegistry imageRegistry = plugin.getImageRegistry();
-		selection = imageRegistry.get(NavigatorActivator.SELECTION_IMAGE_ID); 
-		
 
+		selection = NavigatorActivator.getImage(NavigatorActivator.SELECTION_IMAGE);
+
+		
+		
 		rootparent.setLayout(setupLayout());
 		rootparent.setLayoutData(rowdata);
 

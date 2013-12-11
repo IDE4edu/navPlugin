@@ -10,7 +10,6 @@ import navigatorView.controller.NavigationListener;
 import navigatorView.model.Activity;
 import navigatorView.model.Step;
 import navigatorView.views.NavigatorView;
-
 import edu.berkeley.eduride.base_plugin.*;
 
 import org.eclipse.core.runtime.FileLocator;
@@ -19,6 +18,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.PartInitException;
@@ -110,34 +110,56 @@ public class NavigatorActivator extends AbstractUIPlugin {
 
 	
 	
+	
+	
 	//////  shared images
 	
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path
-	 * 
-	 * @param path
-	 *            the path
-	 * @return the image descriptor
+	 * setup shared images
 	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, path);
-	}
-
-	public static final String SELECTION_IMAGE_ID = "edu.berkeley.eduride.navigation.selection";
+	public static final String SELECTION_IMAGE = "icons/selection.gif";
+	
 
 	@Override
 	protected void initializeImageRegistry(ImageRegistry registry) {
 		super.initializeImageRegistry(registry);
-		Bundle bundle = Platform.getBundle(PLUGIN_ID);
+		
+		putImageIntoRegistry(SELECTION_IMAGE, registry);
+	}
+	
+	
+	
+	////////// 
+	// how to get an image
+	
+	
+	public static Image getImage(String imageID) {
+		ImageRegistry registry = getDefault().getImageRegistry();
+		return (registry.get(imageID));
+	}
+	
 
-		ImageDescriptor myImage = ImageDescriptor.createFromURL(FileLocator
-				.find(bundle, new Path("icons/selection.gif"), null));
-		registry.put(SELECTION_IMAGE_ID, myImage);
+
+
+	//////
+
+	
+	private void putImageIntoRegistry(String pathStr, ImageRegistry registry) {
+
+		ImageDescriptor selection = ImageDescriptor.createFromURL(FileLocator
+				.find(Platform.getBundle(PLUGIN_ID), new Path(pathStr), null));
+		registry.put(pathStr, selection);
 	}
 
-	// //////////////////////
 
+
+	
+	////////////////////////////////////////
+	
+	
+	
+	
+	
 	public IWebBrowser getBrowser() {
 		if (browser == null) {
 			initBrowser();
