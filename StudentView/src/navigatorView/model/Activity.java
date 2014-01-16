@@ -22,6 +22,7 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import edu.berkeley.eduride.base_plugin.util.ISAFormatException;
+import edu.berkeley.eduride.feedbackview.FeedbackModelProvider;
 
 
 public class Activity implements Comparable<Activity> {
@@ -147,13 +148,11 @@ public class Activity implements Comparable<Activity> {
 	}
 
 	
-	
 	private static void setupFeedbackModel(Step step) throws ISAFormatException {
-		edu.berkeley.eduride.feedbackview.FeedbackModelProvider.setup(
-				JavaCore.createCompilationUnitFrom(step.getSourceIFile()), 
+		FeedbackModelProvider.setup(
+				JavaCore.createCompilationUnitFrom(step.getSourceIFile()),
 				null,
-				JavaCore.createCompilationUnitFrom(step.getTestClassIFile())
-				);
+				JavaCore.createCompilationUnitFrom(step.getTestClassIFile()));
 	}
 	
 	
