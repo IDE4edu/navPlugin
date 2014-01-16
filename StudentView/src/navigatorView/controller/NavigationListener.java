@@ -3,8 +3,8 @@ package navigatorView.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-import navigatorView.model.Activity;
-import navigatorView.model.Step;
+import edu.berkeley.eduride.base_plugin.model.Activity;
+import edu.berkeley.eduride.base_plugin.model.Step;
 
 public interface NavigationListener {
 

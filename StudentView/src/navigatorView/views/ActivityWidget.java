@@ -9,9 +9,6 @@ import java.util.Vector;
 import javax.security.auth.callback.LanguageCallback;
 
 import navigatorView.NavigatorActivator;
-import navigatorView.model.Activity;
-import navigatorView.model.Step;
-import navigatorView.model.Step.StepType;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -46,6 +43,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.ide.IDE;
+
+import edu.berkeley.eduride.base_plugin.model.Activity;
+import edu.berkeley.eduride.base_plugin.model.Step;
+import edu.berkeley.eduride.base_plugin.model.Step.StepType;
 
 public class ActivityWidget implements SelectionListener, MouseListener {
 

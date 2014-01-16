@@ -4,20 +4,16 @@
 
 package navigatorView.views;
 
-import navigatorView.model.Activity;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-
-import java.util.ArrayList;
-import java.util.Collections;
-
-import org.eclipse.swt.SWT;
-
 import org.eclipse.jface.dialogs.TitleAreaDialog;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -26,6 +22,9 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
+
+import edu.berkeley.eduride.base_plugin.isafile.ISAParser;
+import edu.berkeley.eduride.base_plugin.model.Activity;
 
 
 public class ActivityChooser extends TitleAreaDialog {
@@ -177,7 +176,7 @@ public class ActivityChooser extends TitleAreaDialog {
 	}
 
 	public void parseISA(IFile file) {
-		Activity s = Activity.parseISA(file);
+		Activity s = ISAParser.parseISA(file);
 		if (s == null) System.err.println("Failed to parse file: " + file.getName());
 		s.getIntro();
 		activities.add(s);

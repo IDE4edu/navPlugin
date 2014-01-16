@@ -7,10 +7,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import navigatorView.controller.NavigationListener;
-import navigatorView.model.Activity;
-import navigatorView.model.Step;
 import navigatorView.views.NavigatorView;
 import edu.berkeley.eduride.base_plugin.*;
+import edu.berkeley.eduride.base_plugin.model.Activity;
+import edu.berkeley.eduride.base_plugin.model.Step;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;

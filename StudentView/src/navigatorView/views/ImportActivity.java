@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import navigatorView.NavigatorActivator;
-import navigatorView.model.ActivityImport;
 
 import org.eclipse.jface.dialogs.TitleAreaDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -35,6 +34,7 @@ import org.eclipse.ui.wizards.datatransfer.ExternalProjectImportWizard;
 import org.json.JSONArray;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
+import edu.berkeley.eduride.base_plugin.model.ActivityImport;
 
 public class ImportActivity extends TitleAreaDialog {
 

@@ -1,6 +1,5 @@
 package navigatorView.handlers;
 
-import navigatorView.model.Activity;
 import navigatorView.views.ActivityChooser;
 import navigatorView.views.NavigatorView;
 
@@ -12,6 +11,8 @@ import org.eclipse.core.commands.IHandlerListener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.*;
+
+import edu.berkeley.eduride.base_plugin.model.Activity;
 
 
 public class ShowNavigatorView implements IHandler2 {

@@ -1,14 +1,13 @@
 package navigatorView.views;
 
 import java.io.IOException;
-
 import java.net.URL;
 import java.util.Vector;
 
 
+
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.ActivityController;
-import navigatorView.model.Activity;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
@@ -34,6 +33,8 @@ import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
+
+import edu.berkeley.eduride.base_plugin.model.Activity;
 
 
 /*
