@@ -148,6 +148,9 @@ public class ActivityChooser extends TitleAreaDialog {
 		
 		Button importButton = new Button(parent, SWT.PUSH);
 		importButton.setText("Import...");
+		// 
+		importButton.setEnabled(false);
+		//
 		importButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				Shell shell = new Shell();
@@ -178,7 +181,7 @@ public class ActivityChooser extends TitleAreaDialog {
 	public void parseISA(IFile file) {
 		Activity s = ISAParser.parseISA(file);
 		if (s == null) System.err.println("Failed to parse file: " + file.getName());
-		s.getIntro();
+		//s.getIntro();
 		activities.add(s);
 	}
 

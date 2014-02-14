@@ -144,6 +144,7 @@ public class NavigatorView extends ViewPart{
 			StepWidget first = parent.stepWidgets.get(0);
 			parent.gotoStep(first);
 		}
+		// so, we don't need to dispose of the dialog, because its 'close()' was called?
 	}
 
 	private Layout setupLayout() {

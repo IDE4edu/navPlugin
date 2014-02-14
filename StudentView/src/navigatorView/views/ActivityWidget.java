@@ -140,7 +140,7 @@ public class ActivityWidget implements SelectionListener, MouseListener {
 			Button test = null;
 			griddata = new GridData();
 			griddata.widthHint = 70;
-			if (step.hasTests()) {
+			if (step.hasLaunchConfig()) {
 				test = new Button(stepGroup, 0);
 				test.setText(step.getLaunchButtonName());
 				test.addSelectionListener(this);
