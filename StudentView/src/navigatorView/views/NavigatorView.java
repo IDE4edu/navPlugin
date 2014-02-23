@@ -6,6 +6,7 @@ import java.util.Vector;
 
 
 
+
 import navigatorView.NavigatorActivator;
 import navigatorView.controller.ActivityController;
 
@@ -35,6 +36,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.Bundle;
 
 import edu.berkeley.eduride.base_plugin.model.Activity;
+import edu.berkeley.eduride.base_plugin.util.Console;
 
 
 /*
@@ -89,8 +91,7 @@ public class NavigatorView extends ViewPart{
 //			URL res = FileLocator.resolve(url);
 //			selectionImage = res.getPath();
 //		} catch (IOException e) {
-//			System.err.println("Could not find image file.");
-//			e.printStackTrace();
+//			Console.err("Could not find image file.");
 //		}
 
 

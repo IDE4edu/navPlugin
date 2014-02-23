@@ -11,6 +11,7 @@ import navigatorView.views.NavigatorView;
 import edu.berkeley.eduride.base_plugin.*;
 import edu.berkeley.eduride.base_plugin.model.Activity;
 import edu.berkeley.eduride.base_plugin.model.Step;
+import edu.berkeley.eduride.base_plugin.util.Console;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.Path;
@@ -255,7 +256,7 @@ public class NavigatorActivator extends AbstractUIPlugin {
 				l.log(action, txtfile);
 			} catch (FileNotFoundException e) {
 				l.log("fileLogFail", "Whoops, tried to log entire file that didn't exist: " + txtfile.getPath());
-				e.printStackTrace();
+				Console.err("Whoops, tried to log entire file that didn't exist: " + txtfile.getPath());
 			}
 		}
 	}

@@ -44,9 +44,11 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.browser.IWebBrowser;
 import org.eclipse.ui.ide.IDE;
 
+import edu.berkeley.eduride.base_plugin.isafile.ISAUtil;
 import edu.berkeley.eduride.base_plugin.model.Activity;
 import edu.berkeley.eduride.base_plugin.model.Step;
 import edu.berkeley.eduride.base_plugin.model.Step.StepType;
+import edu.berkeley.eduride.base_plugin.util.Console;
 
 public class ActivityWidget implements SelectionListener, MouseListener {
 
@@ -297,7 +299,7 @@ public class ActivityWidget implements SelectionListener, MouseListener {
 				openEditor(newStep);
 			} catch (Exception boo) {
 				NavigatorActivator.getDefault().log("openStepFail", newStep.getName() + ": " + boo.getMessage());
-				boo.printStackTrace(System.err);
+				Console.err(boo);
 				return;
 			}
 
@@ -320,8 +322,7 @@ public class ActivityWidget implements SelectionListener, MouseListener {
 			try {
 				IDE.openEditor(page, file);
 			} catch (PartInitException e) {
-
-				e.printStackTrace();
+				Console.err(e);
 			}
 
 		} else if (step.openWithBrowser()) {
@@ -344,14 +345,13 @@ public class ActivityWidget implements SelectionListener, MouseListener {
 
 			} catch (MalformedURLException e) {
 				NavigatorActivator.getDefault().log("browserFail", "Malformed URL Exception, uh oh.  url: " + url + ", step name: " + step.getName());
-				System.err.println("Whoops, bad url.  Couldn't make it from "
-						+ step.getSource());
-				e.printStackTrace();
+				Console.err("Whoops, bad url.  Couldn't make it from "	+ step.getSource());
+				IFile isafile = null;
+				ISAUtil.createISAFormatProblemMarker(isafile, 1, "Bad url.  Couldn't make it from "	+ step.getSource());
 			} catch (PartInitException e) {
 				NavigatorActivator.getDefault().log("browserFail", "PartInitException, uh oh.  url: " + url + ", step name: " + step.getName());
-				System.err.println("Couldn't open the URL from <source>"
-						+ step.getSource());
-				e.printStackTrace();
+				Console.err("Couldn't open the URL from <source>" + step.getSource());
+				Console.err(e);
 			}
 		}
 

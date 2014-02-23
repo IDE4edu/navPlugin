@@ -35,6 +35,7 @@ import org.json.JSONArray;
 
 import edu.berkeley.eduride.base_plugin.EduRideBase;
 import edu.berkeley.eduride.base_plugin.model.ActivityImport;
+import edu.berkeley.eduride.base_plugin.util.Console;
 
 public class ImportActivity extends TitleAreaDialog {
 
@@ -172,9 +173,9 @@ public class ImportActivity extends TitleAreaDialog {
 			
 			connection.disconnect();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			Console.err(e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Console.err(e);
 		}
 		if (jsonString != null) {
 			JSONArray jsonarr = new JSONArray(jsonString);

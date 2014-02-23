@@ -23,13 +23,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import edu.berkeley.eduride.base_plugin.isafile.ISAParser;
+import edu.berkeley.eduride.base_plugin.isafile.ISAUtil;
 import edu.berkeley.eduride.base_plugin.model.Activity;
-
+import edu.berkeley.eduride.base_plugin.util.Console;
 
 public class ActivityChooser extends TitleAreaDialog {
 
-	private ArrayList<Activity> activities =  new ArrayList<Activity>();
+	private ArrayList<Activity> activities = new ArrayList<Activity>();
 	private Activity showActivity;
 	Composite activityArea;
 
@@ -42,29 +42,29 @@ public class ActivityChooser extends TitleAreaDialog {
 	private void findActivitiesInWorkspace() {
 		activities.clear();
 		try {
-			ResourcesPlugin.getWorkspace().getRoot().accept(new IResourceVisitor() {			
-				@Override
-				public boolean visit(IResource resource) throws CoreException {
-					if (!(resource.getType() == IResource.FILE)) return true;
-					String extension = resource.getFileExtension();
-					if (extension != null) {
-						if (extension.equalsIgnoreCase("isa")) {
-							parseISA((IFile)resource);
+			ResourcesPlugin.getWorkspace().getRoot()
+					.accept(new IResourceVisitor() {
+						@Override
+						public boolean visit(IResource resource)
+								throws CoreException {
+							if (!(resource.getType() == IResource.FILE))
+								return true;
+							String extension = resource.getFileExtension();
+							if (extension != null) {
+								if (extension.equalsIgnoreCase("isa")) {
+									parseISA((IFile) resource);
+								}
+							}
+							return true;
 						}
-					}
-					return true;
-				}
-			});
-		} catch (CoreException e1) {
-			System.err.println("Core Exception!!!");
-			e1.printStackTrace();
+					});
+		} catch (CoreException e) {
+			Console.err(e);
 		}
 		// sort activities wrt sortOrder
 		Collections.sort(activities);
 	}
 
-	
-	
 	@Override
 	public void create() {
 		super.create();
@@ -80,8 +80,9 @@ public class ActivityChooser extends TitleAreaDialog {
 		layout.marginTop = 20;
 		layout.marginLeft = 20;
 		parent.setLayout(layout);
-		
-		ScrolledComposite activityScrolledArea = new ScrolledComposite(parent, SWT.V_SCROLL | SWT.BORDER_DASH );
+
+		ScrolledComposite activityScrolledArea = new ScrolledComposite(parent,
+				SWT.V_SCROLL | SWT.BORDER_DASH);
 		activityScrolledArea.setMinHeight(100);
 		activityScrolledArea.setMinWidth(300);
 		activityArea = new Composite(activityScrolledArea, SWT.NONE);
@@ -90,11 +91,10 @@ public class ActivityChooser extends TitleAreaDialog {
 		layout.numColumns = 1;
 		activityArea.setLayout(activityLayout);
 		setActivityArea();
-		
+
 		return parent;
 	}
 
-	
 	private void setActivityArea() {
 		for (int i = 0; i < activities.size(); i++) {
 
@@ -111,9 +111,10 @@ public class ActivityChooser extends TitleAreaDialog {
 				}
 			});
 		}
-		activityArea.setSize(activityArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+		activityArea
+				.setSize(activityArea.computeSize(SWT.DEFAULT, SWT.DEFAULT));
 	}
-	
+
 	private void refreshActivityArea() {
 		// note, the arraylist<Activity> doesn't get updated here
 		Control[] assControls = activityArea.getChildren();
@@ -123,11 +124,10 @@ public class ActivityChooser extends TitleAreaDialog {
 		setActivityArea();
 		activityArea.layout();
 	}
-	
-	
+
 	@Override
 	protected void createButtonsForButtonBar(Composite parent) {
-		
+
 		// Create Okay button
 		Button okButton = createButton(parent, OK, "Okay", false);
 		okButton.addSelectionListener(new SelectionAdapter() {
@@ -136,7 +136,7 @@ public class ActivityChooser extends TitleAreaDialog {
 				close();
 			}
 		});
-		
+
 		// Create Cancel button
 		Button cancelButton = createButton(parent, CANCEL, "Cancel", true);
 		cancelButton.addSelectionListener(new SelectionAdapter() {
@@ -145,10 +145,10 @@ public class ActivityChooser extends TitleAreaDialog {
 				close();
 			}
 		});
-		
+
 		Button importButton = new Button(parent, SWT.PUSH);
 		importButton.setText("Import...");
-		// 
+		//
 		importButton.setEnabled(false);
 		//
 		importButton.addSelectionListener(new SelectionAdapter() {
@@ -162,7 +162,7 @@ public class ActivityChooser extends TitleAreaDialog {
 				}
 			}
 		});
-		
+
 		Button refreshButton = new Button(parent, SWT.PUSH);
 		refreshButton.setText("Refresh");
 		refreshButton.addSelectionListener(new SelectionAdapter() {
@@ -179,14 +179,13 @@ public class ActivityChooser extends TitleAreaDialog {
 	}
 
 	public void parseISA(IFile file) {
-		Activity s = ISAParser.parseISA(file);
-		if (s == null) System.err.println("Failed to parse file: " + file.getName());
-		//s.getIntro();
-		activities.add(s);
+		Activity s = ISAUtil.parseISA(file);
+		if (s != null) {
+			activities.add(s);
+		}
 	}
 
 	public Activity getActivity() {
 		return showActivity;
 	}
-} 
-
+}

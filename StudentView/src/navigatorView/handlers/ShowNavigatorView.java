@@ -13,6 +13,7 @@ import org.eclipse.ui.handlers.HandlerUtil;
 import org.eclipse.ui.*;
 
 import edu.berkeley.eduride.base_plugin.model.Activity;
+import edu.berkeley.eduride.base_plugin.util.Console;
 
 
 public class ShowNavigatorView implements IHandler2 {
@@ -45,7 +46,8 @@ public class ShowNavigatorView implements IHandler2 {
 				// do this conditionally, please
 				//navview.chooseActivity();
 			} catch (PartInitException e) {
-				System.err.println("Couldn't open the navigator view, bummer.");;
+				Console.err("Couldn't open the navigator view.");
+				Console.err(e);
 			}
 			
 			return null;
