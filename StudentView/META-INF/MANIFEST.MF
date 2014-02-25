@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Eduride Navigator View
 Bundle-SymbolicName: edu.berkeley.eduride.navigatorview;singleton:=true
-Bundle-Version: 1.0.2
+Bundle-Version: 1.0.3
 Bundle-Activator: navigatorView.NavigatorActivator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
